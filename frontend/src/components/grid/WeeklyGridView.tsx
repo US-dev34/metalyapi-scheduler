@@ -13,6 +13,7 @@ import { useAllocationMatrix } from '@/hooks/useAllocations';
 import { wbsApi } from '@/lib/api';
 import { formatQuantity, cn } from '@/lib/utils';
 import type { WBSProgress, DailyMatrixResponse, WBSItem } from '@/types';
+import { DEMO_MODE, MOCK_WBS_ITEMS } from '@/lib/mockData';
 
 interface WeekColumn {
   key: string;
@@ -71,7 +72,10 @@ export const WeeklyGridView: React.FC = () => {
   const { data: matrixData, isLoading } = useAllocationMatrix(activeProjectId, fullRange);
   const { data: wbsItems } = useQuery({
     queryKey: ['wbs', activeProjectId],
-    queryFn: () => wbsApi.getByProject(activeProjectId!),
+    queryFn: () => {
+      if (DEMO_MODE) return Promise.resolve(MOCK_WBS_ITEMS);
+      return wbsApi.getByProject(activeProjectId!);
+    },
     enabled: !!activeProjectId,
     staleTime: 60000,
   });

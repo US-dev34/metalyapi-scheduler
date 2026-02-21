@@ -3,28 +3,37 @@ import { FolderKanban } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { projectsApi } from '@/lib/api';
 import { useProjectStore } from '@/stores/projectStore';
+import { DEMO_MODE, MOCK_PROJECTS } from '@/lib/mockData';
 
 export const ProjectSelector: React.FC = () => {
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const setActiveProjectId = useProjectStore((s) => s.setActiveProjectId);
   const setProjects = useProjectStore((s) => s.setProjects);
+  const projects = useProjectStore((s) => s.projects);
 
-  const { data: projects, isLoading } = useQuery({
+  const { data: apiProjects, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: projectsApi.getAll,
     staleTime: 1000 * 60 * 5,
+    enabled: !DEMO_MODE,
   });
 
   // Sync projects to store
   useEffect(() => {
-    if (projects) {
-      setProjects(projects);
+    if (DEMO_MODE) {
+      if (projects.length === 0) {
+        setProjects(MOCK_PROJECTS);
+      }
+    } else if (apiProjects) {
+      setProjects(apiProjects);
     }
-  }, [projects, setProjects]);
+  }, [apiProjects, projects.length, setProjects]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setActiveProjectId(e.target.value);
   };
+
+  const displayLoading = !DEMO_MODE && isLoading;
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -35,14 +44,14 @@ export const ProjectSelector: React.FC = () => {
       <select
         value={activeProjectId ?? ''}
         onChange={handleChange}
-        disabled={isLoading}
+        disabled={displayLoading}
         className="w-full rounded-md border border-gray-600 bg-gray-700 px-2.5 py-1.5 text-sm text-white focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
       >
-        {isLoading && <option value="">Loading...</option>}
-        {!isLoading && !projects?.length && (
+        {displayLoading && <option value="">Loading...</option>}
+        {!displayLoading && projects.length === 0 && (
           <option value="">No projects</option>
         )}
-        {projects?.map((p) => (
+        {projects.map((p) => (
           <option key={p.id} value={p.id}>
             {p.code} - {p.name}
           </option>

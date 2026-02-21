@@ -9,6 +9,7 @@ import { useGenerateForecast } from '@/hooks/useAI';
 import { ForecastView } from '@/components/ai/ForecastView';
 import { aiApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { DEMO_MODE } from '@/lib/mockData';
 import type { ForecastResponse } from '@/types';
 
 type TabId = 'forecast' | 'optimize' | 'report' | 'digest';
@@ -48,18 +49,56 @@ export const AIPanel: React.FC = () => {
           });
           return;
         case 'optimize': {
-          const opt = await aiApi.getOptimization(activeProjectId);
-          setOptimizeData(opt);
+          if (DEMO_MODE) {
+            await new Promise((r) => setTimeout(r, 700));
+            setOptimizeData({
+              total: 3,
+              suggestions: [
+                { type: 'resource_reallocation', description: 'Move 2 workers from DR-01 to CW-02 starting KW10. DR-01 is ahead of schedule and CW-02 needs reinforcement.', impact_score: 8.5 },
+                { type: 'schedule_compression', description: 'Add overtime shifts for CW-01 on Saturdays in KW11-KW12 to recover 3-day delay.', impact_score: 6.2 },
+                { type: 'parallel_execution', description: 'Start GL-01 installation in parallel with ST-01 framing on floors 5-8.', impact_score: 7.1 },
+              ],
+            });
+          } else {
+            const opt = await aiApi.getOptimization(activeProjectId);
+            setOptimizeData(opt);
+          }
           break;
         }
         case 'report': {
-          const rpt = await aiApi.getReport(activeProjectId);
-          setReportData(rpt);
+          if (DEMO_MODE) {
+            await new Promise((r) => setTimeout(r, 700));
+            setReportData({
+              markdown: '## Weekly Progress Report - KW08\n\n**Period:** 17 Feb - 21 Feb 2026\n\n### Summary\nOverall project progress stands at 26.9%. 8 WBS items are active with 42 workers deployed daily on average.\n\n### Highlights\n- **DR-01** achieved 60% completion, 2 weeks ahead of baseline\n- **GL-01** reached 30% with above-average productivity (1.714 units/manday)\n\n### Concerns\n- **CW-02** is significantly behind schedule at 14.7% vs planned 28%\n- Weather delays impacted outdoor steel frame work for 2 days\n\n### Recommendations\n1. Reallocate 2 workers from DR-01 to CW-02\n2. Monitor CW-03 closely - early indicators show potential delays\n3. Pre-order GL-01 materials for KW10-KW12 phase',
+              generated_at: new Date().toISOString(),
+            });
+          } else {
+            const rpt = await aiApi.getReport(activeProjectId);
+            setReportData(rpt);
+          }
           break;
         }
         case 'digest': {
-          const dig = await aiApi.getDailyDigest(activeProjectId);
-          setDigestData(dig);
+          if (DEMO_MODE) {
+            await new Promise((r) => setTimeout(r, 700));
+            setDigestData({
+              summary: 'Today was a productive day with 42 workers across 8 active WBS items. Total 28 units completed.',
+              kpi: { total_workers: 42, worker_trend: 3, active_items: 8, qty_today: 28, qty_trend: 5, overall_progress: 26.9 },
+              highlights: [
+                { wbs_code: 'DR-01', qty_today: 6, workers: 4 },
+                { wbs_code: 'GL-01', qty_today: 8, workers: 7 },
+                { wbs_code: 'CW-01', qty_today: 4, workers: 5 },
+              ],
+              concerns: [
+                { wbs_code: 'CW-02', issue: 'Only 3 workers assigned, below planned 7' },
+                { wbs_code: 'ST-01', issue: 'Material delivery delayed by 1 day' },
+              ],
+              generated_at: new Date().toISOString(),
+            });
+          } else {
+            const dig = await aiApi.getDailyDigest(activeProjectId);
+            setDigestData(dig);
+          }
           break;
         }
       }

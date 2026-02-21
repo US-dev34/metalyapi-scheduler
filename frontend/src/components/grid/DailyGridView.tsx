@@ -18,6 +18,7 @@ import { formatDayHeader, formatQuantity, isToday } from '@/lib/utils';
 import type { AllocationCell, CellData, WBSProgress, DailyMatrixResponse, WBSItem } from '@/types';
 import { getCellStatus, getCellColor } from '@/types';
 import { useQuery } from '@tanstack/react-query';
+import { DEMO_MODE, MOCK_WBS_ITEMS } from '@/lib/mockData';
 
 const DEBOUNCE_MS = 500;
 
@@ -49,7 +50,10 @@ export const DailyGridView: React.FC = () => {
 
   const { data: wbsItems } = useQuery({
     queryKey: ['wbs', activeProjectId],
-    queryFn: () => wbsApi.getByProject(activeProjectId!),
+    queryFn: () => {
+      if (DEMO_MODE) return Promise.resolve(MOCK_WBS_ITEMS);
+      return wbsApi.getByProject(activeProjectId!);
+    },
     enabled: !!activeProjectId,
     staleTime: 60000,
   });

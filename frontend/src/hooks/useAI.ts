@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { aiApi, chatApi } from '@/lib/api';
+import { DEMO_MODE, getMockChatResponse, getMockForecast } from '@/lib/mockData';
 import type { ChatMessage, ChatParseResponse, ForecastResponse } from '@/types';
 
 const AI_KEYS = {
@@ -13,7 +14,14 @@ const AI_KEYS = {
 export function useGenerateForecast(projectId: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => aiApi.getForecast(projectId),
+    mutationFn: (): Promise<ForecastResponse> => {
+      if (DEMO_MODE) {
+        return new Promise((resolve) =>
+          setTimeout(() => resolve(getMockForecast()), 800),
+        );
+      }
+      return aiApi.getForecast(projectId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: AI_KEYS.forecast(projectId) });
     },
@@ -30,7 +38,14 @@ export function useChat(projectId: string | null) {
   const queryClient = useQueryClient();
 
   const parseMutation = useMutation({
-    mutationFn: (message: string) => chatApi.sendMessage(projectId!, message),
+    mutationFn: (message: string): Promise<ChatParseResponse> => {
+      if (DEMO_MODE) {
+        return new Promise((resolve) =>
+          setTimeout(() => resolve(getMockChatResponse(message)), 600),
+        );
+      }
+      return chatApi.sendMessage(projectId!, message);
+    },
     onSuccess: (result: ChatParseResponse, message: string) => {
       const userMsg: ChatMessage = {
         id: crypto.randomUUID(),
@@ -51,7 +66,12 @@ export function useChat(projectId: string | null) {
   });
 
   const confirmMutation = useMutation({
-    mutationFn: (messageId: string) => chatApi.applyActions(projectId!, messageId),
+    mutationFn: (messageId: string) => {
+      if (DEMO_MODE) {
+        return new Promise<void>((resolve) => setTimeout(resolve, 400));
+      }
+      return chatApi.applyActions(projectId!, messageId);
+    },
     onSuccess: () => {
       const systemMsg: ChatMessage = {
         id: crypto.randomUUID(),

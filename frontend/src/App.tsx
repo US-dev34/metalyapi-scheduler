@@ -8,15 +8,25 @@ import { AIPanel } from '@/components/ai/AIPanel';
 import { LoginPage } from '@/components/auth/LoginPage';
 import { useUIStore } from '@/stores/uiStore';
 import { supabase } from '@/lib/supabase';
+import { DEMO_MODE, MOCK_PROJECTS } from '@/lib/mockData';
+import { useProjectStore } from '@/stores/projectStore';
 
 const App: React.FC = () => {
   const chatPanelOpen = useUIStore((s) => s.chatPanelOpen);
   const aiPanelOpen = useUIStore((s) => s.aiPanelOpen);
+  const setProjects = useProjectStore((s) => s.setProjects);
 
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (DEMO_MODE) {
+      // In demo mode, skip auth and load mock projects
+      setProjects(MOCK_PROJECTS);
+      setLoading(false);
+      return;
+    }
+
     // Check initial session
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
@@ -31,7 +41,7 @@ const App: React.FC = () => {
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [setProjects]);
 
   if (loading) {
     return (
@@ -41,7 +51,7 @@ const App: React.FC = () => {
     );
   }
 
-  if (!session) {
+  if (!DEMO_MODE && !session) {
     return <LoginPage />;
   }
 
