@@ -4,7 +4,7 @@ WORKDIR /app
 
 # System deps for psycopg2 and general build
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc libpq-dev curl && \
+    gcc libpq-dev curl pkg-config libcairo2-dev meson && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python deps
