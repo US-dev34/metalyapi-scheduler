@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Construction managers can see today's manpower allocation across all facade work items, edit it in real-time, and instantly know which items are behind schedule
-**Current focus:** All 5 phases complete — deployment & smoke test remaining
+**Current focus:** Deployment — app is fully functional locally, needs Railway + Vercel deployment
 
 ## Current Position
 
 Phase: 5 of 5 (Production Deployment)
 Plan: All phases executed
-Status: Code complete, deployment pending
-Last activity: 2026-02-21 -- All 5 phases implemented and committed
+Status: App fully functional locally, deployment pending CLI auth
+Last activity: 2026-02-21 -- DB migrations run, WBS data imported, full smoke test passed
 
-Progress: [████████░░] 85%
+Progress: [█████████░] 95%
 
 ## Performance Metrics
 
@@ -42,22 +42,42 @@ Progress: [████████░░] 85%
 - Auth conditional: enforced in production, optional in development
 - Forecast batch optimization: 2 queries + Python grouping instead of N+1
 - Railway for backend, Vercel for frontend
+- Backend db.py uses service_role key to bypass RLS (patched this session)
+- Supabase MCP added to .claude/settings.json for SQL execution
+
+### Completed Todos
+
+- [x] Run ALL migrations (001-005) via Supabase SQL Editor
+- [x] Get SUPABASE_SERVICE_KEY from dashboard (legacy API keys)
+- [x] Create admin user (admin@metalyapi.com / MetalYapi2026!)
+- [x] Add admin to project_members for E2NS
+- [x] Import 86 WBS items from Excel
+- [x] Smoke test: Login, Grid, Cell Edit, Save, Views, Export
 
 ### Pending Todos
 
-- Create frontend/.env with Supabase credentials
-- Run migrations 004 + 005 in Supabase SQL editor
-- Create admin user + project_members entry
-- Deploy to Railway + Vercel
-- Smoke test
+- Deploy backend to Railway (needs `railway login`)
+- Deploy frontend to Vercel (needs `vercel login`)
+- Set CLAUDE_API_KEY for Chat/AI features
+- Full production smoke test after deploy
 
 ### Blockers/Concerns
 
-- Frontend needs .env with Supabase credentials to load
-- Migrations 004/005 not yet run in Supabase
+- Railway/Vercel CLIs need interactive login (can't be automated)
+- CLAUDE_API_KEY empty — Chat NLP and AI features won't work without it
+- Port 8000 occupied by stale process — backend runs on 8001 locally
+
+### Key Identifiers
+
+- Supabase project ref: tfcmfbfnvrtsfqevwsko
+- Admin user ID: 90b03855-ce4d-445d-bb92-4f383eb68634
+- Admin email: admin@metalyapi.com
+- E2NS project ID: 5f0fc90a-00b7-4cf7-aaba-22dde8118fa1
+- Backend: http://localhost:8001
+- Frontend: http://localhost:5173
 
 ## Session Continuity
 
 Last session: 2026-02-21
-Stopped at: All 5 phases complete, local servers started but frontend hit missing Supabase .env
+Stopped at: Deployment blocked by CLI auth — all local features verified
 Resume file: .planning/phases/05-production-deployment/.continue-here.md
