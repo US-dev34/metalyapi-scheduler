@@ -162,7 +162,17 @@ export const aiApi = {
     return res.data;
   },
 
-  getReport: async (projectId: string): Promise<unknown> => {
+  getOptimization: async (projectId: string): Promise<{ suggestions: any[]; total: number }> => {
+    const res = await api.post(`/api/v1/ai/${projectId}/optimize`);
+    return res.data;
+  },
+
+  getDailyDigest: async (projectId: string): Promise<any> => {
+    const res = await api.post(`/api/v1/ai/${projectId}/daily-digest`);
+    return res.data;
+  },
+
+  getReport: async (projectId: string): Promise<{ markdown: string; metrics: any; generated_at: string }> => {
     const res = await api.get(`/api/v1/ai/${projectId}/report`);
     return res.data;
   },

@@ -69,6 +69,24 @@ class ForecastEngine:
             .data
         )
 
+        # Batch fetch ALL allocations for this project (eliminates N+1)
+        wbs_ids = [w["id"] for w in wbs_items]
+        all_allocations = []
+        if wbs_ids:
+            all_allocations = (
+                db.table("daily_allocations")
+                .select("wbs_item_id, date, actual_manpower, qty_done")
+                .in_("wbs_item_id", wbs_ids)
+                .order("date")
+                .execute()
+                .data
+            )
+
+        # Group allocations by wbs_item_id
+        allocs_by_wbs: dict[str, list[dict]] = {}
+        for a in all_allocations:
+            allocs_by_wbs.setdefault(a["wbs_item_id"], []).append(a)
+
         today = date.today()
         forecasts = []
 
@@ -76,15 +94,8 @@ class ForecastEngine:
             wbs_id = wbs["id"]
             qty = float(wbs.get("qty", 0))
 
-            # Get allocations for this WBS
-            allocs = (
-                db.table("daily_allocations")
-                .select("date, actual_manpower, qty_done")
-                .eq("wbs_item_id", wbs_id)
-                .order("date")
-                .execute()
-                .data
-            )
+            # Use pre-fetched allocations
+            allocs = allocs_by_wbs.get(wbs_id, [])
 
             # Step 1: Local compute
             total_qty_done = sum(float(a.get("qty_done", 0)) for a in allocs)
