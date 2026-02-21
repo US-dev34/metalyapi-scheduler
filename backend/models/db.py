@@ -30,14 +30,17 @@ def get_db():
         return _client
 
     url = settings.supabase_url
-    if url and url.startswith("https://") and settings.supabase_key:
+    # Prefer service key (bypasses RLS) for server-side operations
+    key = settings.supabase_service_key or settings.supabase_key
+    if url and url.startswith("https://") and key:
         try:
             from supabase import create_client
-            client = create_client(url, settings.supabase_key)
+            client = create_client(url, key)
             # Test if tables exist
             result = client.table("projects").select("id").limit(1).execute()
             _client = client
-            logger.info("Connected to Supabase: %s (%d projects)", url, len(result.data))
+            key_type = "service_role" if settings.supabase_service_key else "anon"
+            logger.info("Connected to Supabase: %s (%d projects, %s key)", url, len(result.data), key_type)
             return _client
         except Exception as e:
             logger.warning("Supabase tables not ready: %s — using MockDB", e)

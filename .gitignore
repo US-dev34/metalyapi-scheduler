@@ -35,3 +35,18 @@ htmlcov/
 
 # Logs
 *.log
+
+# Screenshots / test artifacts
+*.png
+test_export.xlsx
+
+# Playwright MCP
+.playwright-mcp/
+
+# Claude settings (contains local paths)
+.claude/
+
+# Temporary SQL migration files
+manpower_bulk_*.sql
+wbs_bulk_*.sql
+wbs_migration*.sql
