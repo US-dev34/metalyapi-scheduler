@@ -198,7 +198,31 @@ export const reportsApi = {
   },
 
   exportPdf: async (projectId: string): Promise<void> => {
-    // Phase 4
+    const res = await api.get(`/api/v1/reports/${projectId}/pdf`, { responseType: 'blob' });
+    const contentType = res.headers['content-type'] || 'application/pdf';
+    const ext = contentType.includes('html') ? 'html' : 'pdf';
+    const url = window.URL.createObjectURL(new Blob([res.data], { type: contentType }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Daily_Report.${ext}`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  },
+
+  exportProgress: async (projectId: string): Promise<void> => {
+    const res = await api.get(`/api/v1/reports/${projectId}/progress`, { responseType: 'blob' });
+    const contentType = res.headers['content-type'] || 'application/pdf';
+    const ext = contentType.includes('html') ? 'html' : 'pdf';
+    const url = window.URL.createObjectURL(new Blob([res.data], { type: contentType }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Progress_Report.${ext}`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
   },
 };
 
