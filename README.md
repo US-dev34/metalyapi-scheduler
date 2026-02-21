@@ -69,3 +69,4 @@ construction-scheduler/
 ## Development
 
 See [CONVENTIONS.md](CONVENTIONS.md) for code standards and [ARCHITECTURE.md](.claude/ARCHITECTURE.md) for full architecture documentation.
+# Railway Deployment
