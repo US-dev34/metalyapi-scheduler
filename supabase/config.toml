@@ -1,0 +1,23 @@
+[project]
+id = "metalyapi-scheduling"
+name = "MetalYapi Scheduling Platform"
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[api]
+enabled = true
+port = 54321
+
+[auth]
+enabled = true
+site_url = "http://localhost:5173"
+
+[storage]
+enabled = false

@@ -1,0 +1,46 @@
+# Version: 1.0
+# Last Updated: 2026-02-20
+# Model: claude-sonnet-4-20250514
+# Max Tokens: 4000
+# Temperature: 0.3
+
+Sen bir inşaat planlama uzmanısın. Aşağıdaki ilerleme verilerine göre her WBS kalemi için tahmin yap.
+
+## Proje Bilgisi
+Proje: {project_name}
+Başlangıç: {start_date}
+Hedef Bitiş: {end_date}
+Bugün: {current_date}
+
+## WBS İlerleme Verileri
+{wbs_progress_table}
+
+## Baseline Planı
+{baseline_summary}
+
+## Kısıtlar
+- Toplam günlük adam kapasitesi: {max_manpower}
+- Deadline'lar: {deadlines}
+
+## Değerlendirme Kriterleri
+1. Mevcut productivity rate'e göre tahmini bitiş hesapla
+2. Baseline'a göre sapma analizi yap
+3. Risk seviyesi belirle: low (<%10 sapma), medium (%10-25 sapma), high (>%25 sapma)
+4. Kaynak optimizasyonu öner
+5. Genel durum özeti yaz
+
+## Output Format (sadece JSON döndür)
+{{
+  "forecasts": [
+    {{
+      "wbs_code": "CW-01",
+      "wbs_name": "Curtain Wall Tip-1",
+      "current_progress": 45.5,
+      "predicted_end_date": "2026-04-15",
+      "predicted_total_manday": 120,
+      "risk_level": "medium",
+      "recommendation": "KW12'den itibaren 2 ek adam gerekli"
+    }}
+  ],
+  "overall_summary": "Genel durum özeti Türkçe..."
+}}

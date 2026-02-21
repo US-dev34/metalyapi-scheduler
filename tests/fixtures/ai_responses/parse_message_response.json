@@ -1,0 +1,27 @@
+{
+  "actions": [
+    {
+      "wbs_code": "CW-01",
+      "date": "2026-02-19",
+      "actual_manpower": 5,
+      "qty_done": 3,
+      "note": null
+    },
+    {
+      "wbs_code": "CW-02",
+      "date": "2026-02-19",
+      "actual_manpower": 7,
+      "qty_done": 5,
+      "note": null
+    },
+    {
+      "wbs_code": "CW-03",
+      "date": "2026-02-19",
+      "actual_manpower": 0,
+      "qty_done": 0,
+      "note": "Çalışılmadı"
+    }
+  ],
+  "summary": "3 cephe güncellendi",
+  "confidence": 0.95
+}

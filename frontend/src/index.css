@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  body {
+    @apply m-0 p-0;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-gray-300;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+
+@layer components {
+  /* AG Grid custom overrides */
+  .ag-theme-alpine {
+    --ag-header-background-color: #f8fafc;
+    --ag-header-foreground-color: #1e293b;
+    --ag-row-hover-color: #f1f5f9;
+    --ag-selected-row-background-color: #e0f2fe;
+    --ag-font-family: 'Inter', system-ui, sans-serif;
+    --ag-font-size: 13px;
+    --ag-row-height: 36px;
+    --ag-header-height: 40px;
+  }
+
+  .btn-primary {
+    @apply rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+
+  .btn-icon {
+    @apply rounded-md p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700;
+  }
+
+  .panel-slide {
+    @apply fixed right-0 top-0 z-50 h-full shadow-2xl transition-transform duration-300;
+  }
+
+  /* AG Grid today column highlight */
+  .ag-header-cell-today {
+    background-color: #dbeafe !important;
+    font-weight: 600 !important;
+  }
+}
+
+@layer utilities {
+  .cell-actual {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .cell-over {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .cell-forecast {
+    @apply bg-blue-100 text-blue-800;
+  }
+
+  .cell-empty {
+    @apply bg-gray-50 text-gray-400;
+  }
+
+  .cell-planned {
+    @apply bg-amber-100 text-amber-800;
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "forecasts": [
+    {
+      "wbs_code": "CW-01",
+      "wbs_name": "Curtain Wall Tip-1",
+      "current_progress": 35.0,
+      "predicted_end_date": "2026-04-15",
+      "predicted_total_manday": 120,
+      "risk_level": "medium",
+      "recommendation": "Mevcut hızda devam ederse 1 hafta gecikme riski var. KW12'den itibaren 2 ek adam önerilir."
+    },
+    {
+      "wbs_code": "CW-02",
+      "wbs_name": "Curtain Wall Tip-2",
+      "current_progress": 7.3,
+      "predicted_end_date": "2026-05-01",
+      "predicted_total_manday": 180,
+      "risk_level": "high",
+      "recommendation": "İlerleme çok yavaş. Acil kaynak artırımı gerekli."
+    },
+    {
+      "wbs_code": "DR-01",
+      "wbs_name": "Door Type-A",
+      "current_progress": 4.0,
+      "predicted_end_date": "2026-03-20",
+      "predicted_total_manday": 45,
+      "risk_level": "low",
+      "recommendation": "İlerleme planın üzerinde, mevcut kaynakla sorunsuz tamamlanacak."
+    },
+    {
+      "wbs_code": "GL-01",
+      "wbs_name": "Glazing Panel",
+      "current_progress": 9.0,
+      "predicted_end_date": "2026-04-30",
+      "predicted_total_manday": 95,
+      "risk_level": "low",
+      "recommendation": "Verimlilik yüksek, plan dahilinde ilerliyor."
+    }
+  ],
+  "overall_summary": "Genel ilerleme %14. CW-02 kritik risk altında — acil kaynak artırımı gerekli. CW-01 orta risk seviyesinde. DR-01 ve GL-01 planın üzerinde ilerliyor.",
+  "generated_at": "2026-02-20T14:30:00Z"
+}
