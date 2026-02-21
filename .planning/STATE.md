@@ -5,57 +5,59 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Construction managers can see today's manpower allocation across all facade work items, edit it in real-time, and instantly know which items are behind schedule
-**Current focus:** Phase 1: Foundation Stabilization
+**Current focus:** All 5 phases complete — deployment & smoke test remaining
 
 ## Current Position
 
-Phase: 1 of 5 (Foundation Stabilization)
-Plan: 0 of 3 in current phase
-Status: Ready to plan
-Last activity: 2026-02-21 -- Roadmap created
+Phase: 5 of 5 (Production Deployment)
+Plan: All phases executed
+Status: Code complete, deployment pending
+Last activity: 2026-02-21 -- All 5 phases implemented and committed
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [████████░░] 85%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: -
-- Total execution time: 0 hours
+- Total plans completed: 5 phases
+- Average duration: ~20 min per phase
+- Total execution time: ~2 hours
 
 **By Phase:**
 
-| Phase | Plans | Total | Avg/Plan |
-|-------|-------|-------|----------|
-| - | - | - | - |
-
-**Recent Trend:**
-- Last 5 plans: -
-- Trend: -
-
-*Updated after each plan completion*
+| Phase | Status | Commit |
+|-------|--------|--------|
+| 1. Foundation Stabilization | Done | fc2e0e0 |
+| 2. Auth & Access Control | Done | 6c6b25c |
+| 3. Export & Import Pipeline | Done | b0c1975 |
+| 4. AI Intelligence Layer | Done | e2fa7e3 |
+| 5. Production Deployment | Done | 9c9f5a2 |
 
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
 - Fix-first over rewrite: Substantial working code exists, fixing bugs faster than starting over
-- Exception handling before all other fixes: Silent swallowing creates invisible regressions
+- xhtml2pdf for PDF generation (pure Python, cross-platform) with HTML fallback
+- Auth conditional: enforced in production, optional in development
+- Forecast batch optimization: 2 queries + Python grouping instead of N+1
+- Railway for backend, Vercel for frontend
 
 ### Pending Todos
 
-None yet.
+- Create frontend/.env with Supabase credentials
+- Run migrations 004 + 005 in Supabase SQL editor
+- Create admin user + project_members entry
+- Deploy to Railway + Vercel
+- Smoke test
 
 ### Blockers/Concerns
 
-- Phase 1 internal ordering is strict: exception handling (FIX-01) first, then safe DB access (FIX-02), then business logic bugs
-- Phase 2 sequencing risk: backend must switch to supabase_service_key BEFORE enabling RLS policies to avoid data lockout
+- Frontend needs .env with Supabase credentials to load
+- Migrations 004/005 not yet run in Supabase
 
 ## Session Continuity
 
 Last session: 2026-02-21
-Stopped at: Session resumed, proceeding to plan Phase 1
-Resume file: .planning/phases/01-foundation-stabilization/.continue-here.md
+Stopped at: All 5 phases complete, local servers started but frontend hit missing Supabase .env
+Resume file: .planning/phases/05-production-deployment/.continue-here.md
