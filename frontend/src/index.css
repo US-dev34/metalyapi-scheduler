@@ -38,9 +38,20 @@
     --ag-row-hover-color: #f1f5f9;
     --ag-selected-row-background-color: #e0f2fe;
     --ag-font-family: 'Inter', system-ui, sans-serif;
-    --ag-font-size: 13px;
-    --ag-row-height: 36px;
-    --ag-header-height: 40px;
+    --ag-font-size: 12px;
+    --ag-row-height: 28px;
+    --ag-header-height: 32px;
+    --ag-cell-horizontal-padding: 4px;
+  }
+
+  /* Month group header band */
+  .ag-header-group-month {
+    background-color: #e2e8f0 !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 2px solid #94a3b8 !important;
   }
 
   .btn-primary {

@@ -54,6 +54,19 @@ export interface WBSItem {
   sort_order: number;
   level: number;
   is_summary: boolean;
+  building: string | null;
+  nta_ref: string | null;
+  status: string | null;
+  budget_eur: number;
+  target_kw: string | null;
+  scope: string | null;
+  notes: string | null;
+  qty_ext: number;
+  done_ext: number;
+  rem_ext: number;
+  qty_int: number;
+  done_int: number;
+  rem_int: number;
   children?: WBSItem[];
 }
 

@@ -1,9 +1,9 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import type { ColDef, ValueFormatterParams, CellClassParams } from 'ag-grid-community';
+import type { ColDef, ColGroupDef, ValueFormatterParams, CellClassParams } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { Calendar } from 'lucide-react';
+import { Calendar, Settings2 } from 'lucide-react';
 import { parseISO, addWeeks, startOfISOWeek, endOfISOWeek, getISOWeek, getISOWeekYear, format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 
@@ -11,6 +11,7 @@ import { useUIStore } from '@/stores/uiStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { useAllocationMatrix } from '@/hooks/useAllocations';
 import { wbsApi } from '@/lib/api';
+import { ColumnSettings } from '@/components/grid/ColumnSettings';
 import { formatQuantity, cn } from '@/lib/utils';
 import type { WBSProgress, DailyMatrixResponse, WBSItem } from '@/types';
 
@@ -19,6 +20,7 @@ interface WeekColumn {
   label: string;
   startDate: string;
   endDate: string;
+  monthKey: string;
 }
 
 interface WeeklyRow {
@@ -28,9 +30,24 @@ interface WeeklyRow {
   wbs_number: string;
   qty: number;
   progress_pct: number;
+  total_actual_manday: number;
   parent_id: string | null;
   level: number;
   is_summary: boolean;
+  building: string;
+  unit: string;
+  qty_ext: number;
+  done_ext: number;
+  rem_ext: number;
+  qty_int: number;
+  done_int: number;
+  rem_int: number;
+  budget_eur: number;
+  target_kw: string;
+  status: string;
+  scope: string;
+  nta_ref: string;
+  notes: string;
   [key: string]: unknown;
 }
 
@@ -45,7 +62,8 @@ function buildWeekColumns(projectStart: string, projectEnd: string): WeekColumn[
     const year = getISOWeekYear(weekStart);
     const key = `${year}-KW${String(weekNum).padStart(2, '0')}`;
     const label = `KW${String(weekNum).padStart(2, '0')}`;
-    columns.push({ key, label, startDate: format(weekStart, 'yyyy-MM-dd'), endDate: format(weekEnd, 'yyyy-MM-dd') });
+    const monthKey = format(weekStart, 'yyyy-MM');
+    columns.push({ key, label, startDate: format(weekStart, 'yyyy-MM-dd'), endDate: format(weekEnd, 'yyyy-MM-dd'), monthKey });
     weekStart = addWeeks(weekStart, 1);
   }
   return columns;
@@ -57,18 +75,14 @@ function getWeekKey(dateStr: string): string {
 }
 
 export const WeeklyGridView: React.FC = () => {
-  const dateRange = useUIStore((s) => s.dateRange);
+  const programRange = useUIStore((s) => s.programRange);
+  const wbsColumns = useUIStore((s) => s.wbsColumns);
+  const columnSettingsOpen = useUIStore((s) => s.columnSettingsOpen);
+  const toggleColumnSettings = useUIStore((s) => s.toggleColumnSettings);
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
-  const activeProject = useProjectStore((s) => s.activeProject);
-  const project = activeProject();
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
-  const fullRange = useMemo(() => {
-    if (!project) return dateRange;
-    return { from: project.start_date, to: project.end_date || '2026-07-31' };
-  }, [project, dateRange]);
-
-  const { data: matrixData, isLoading } = useAllocationMatrix(activeProjectId, fullRange);
+  const { data: matrixData, isLoading } = useAllocationMatrix(activeProjectId, programRange);
   const { data: wbsItems } = useQuery({
     queryKey: ['wbs', activeProjectId],
     queryFn: () => wbsApi.getByProject(activeProjectId!),
@@ -88,10 +102,10 @@ export const WeeklyGridView: React.FC = () => {
     return map;
   }, [wbsItems]);
 
-  const weekColumns = useMemo<WeekColumn[]>(() => {
-    if (!project) return [];
-    return buildWeekColumns(project.start_date, project.end_date || '2026-07-31');
-  }, [project]);
+  const weekColumns = useMemo<WeekColumn[]>(
+    () => buildWeekColumns(programRange.from, programRange.to),
+    [programRange],
+  );
 
   const { allRows, kpi } = useMemo(() => {
     if (!matrixData || !weekColumns.length) {
@@ -103,13 +117,20 @@ export const WeeklyGridView: React.FC = () => {
     const progressIds = new Set(progressItems.map((w: WBSProgress) => w.id));
     let totalPlanned = 0, totalActual = 0, totalQtyDone = 0;
 
-    // Add summary rows not in progress
+    // Summary rows not in progress
     if (wbsItems) {
       for (const item of wbsItems) {
         if (item.is_summary && !progressIds.has(item.id)) {
           rows.push({
             id: item.id, wbs_code: item.wbs_code, wbs_name: item.wbs_name, wbs_number: '',
-            qty: 0, progress_pct: 0, parent_id: item.parent_id, level: item.level, is_summary: true,
+            qty: 0, progress_pct: 0, total_actual_manday: 0,
+            parent_id: item.parent_id, level: item.level, is_summary: true,
+            building: item.building || '', unit: item.unit || '',
+            qty_ext: item.qty_ext || 0, done_ext: item.done_ext || 0, rem_ext: item.rem_ext || 0,
+            qty_int: item.qty_int || 0, done_int: item.done_int || 0, rem_int: item.rem_int || 0,
+            budget_eur: item.budget_eur || 0, target_kw: item.target_kw || '',
+            status: item.status || '', scope: item.scope || '',
+            nta_ref: item.nta_ref || '', notes: item.notes || '',
           });
         }
       }
@@ -120,7 +141,14 @@ export const WeeklyGridView: React.FC = () => {
       const row: WeeklyRow = {
         id: wbs.id, wbs_code: wbs.wbs_code, wbs_name: wbs.wbs_name, wbs_number: '',
         qty: wbs.qty, progress_pct: wbs.progress_pct,
+        total_actual_manday: wbs.total_actual_manday,
         parent_id: info?.parent_id ?? null, level: info?.level ?? 2, is_summary: info?.is_summary ?? false,
+        building: info?.building || '', unit: info?.unit || '',
+        qty_ext: info?.qty_ext || 0, done_ext: info?.done_ext || 0, rem_ext: info?.rem_ext || 0,
+        qty_int: info?.qty_int || 0, done_int: info?.done_int || 0, rem_int: info?.rem_int || 0,
+        budget_eur: info?.budget_eur || 0, target_kw: info?.target_kw || '',
+        status: info?.status || '', scope: info?.scope || '',
+        nta_ref: info?.nta_ref || '', notes: info?.notes || '',
       };
 
       // Aggregate daily data into weeks
@@ -202,65 +230,157 @@ export const WeeklyGridView: React.FC = () => {
 
   const currentWeekKey = getWeekKey(format(new Date(), 'yyyy-MM-dd'));
 
-  const columnDefs = useMemo<ColDef[]>(() => {
-    const fixedCols: ColDef[] = [
-      { headerName: '#', field: 'wbs_number', width: 60, pinned: 'left', lockPinned: true,
-        cellStyle: (p: CellClassParams) => ({ color: '#6b7280', fontWeight: p.data?.is_summary ? 700 : 400, ...sumBg(p) }) },
-      { headerName: 'Code', field: 'wbs_code', width: 120, pinned: 'left', lockPinned: true, sortable: true, filter: true,
-        valueFormatter: (p: ValueFormatterParams) => {
-          if (!p.data) return '';
-          const { is_summary, wbs_code } = p.data as WeeklyRow;
-          const arrow = is_summary ? (collapsedGroups.has(p.data.id) ? '▶ ' : '▼ ') : '  ';
-          return `${arrow}${wbs_code}`;
-        },
-        cellStyle: (p: CellClassParams) => ({
-          fontFamily: 'monospace', fontSize: '13px',
-          fontWeight: p.data?.is_summary ? 700 : 500,
-          cursor: p.data?.is_summary ? 'pointer' : 'default',
-          paddingLeft: `${(p.data?.level || 0) * 16 + 4}px`,
-          ...sumBg(p),
-        }),
-        onCellClicked: (p) => { if (p.data?.is_summary) toggleGroup(p.data.id); },
-      },
-      { headerName: 'Activity', field: 'wbs_name', width: 200, pinned: 'left', lockPinned: true,
-        cellStyle: (p: CellClassParams) => ({ fontWeight: p.data?.is_summary ? 700 : 400, ...sumBg(p) }) },
-      { headerName: 'QTY', field: 'qty', width: 75, pinned: 'left', lockPinned: true, type: 'numericColumn',
-        valueFormatter: (p: ValueFormatterParams) => formatQuantity(p.value as number), cellStyle: sumBg },
-      { headerName: 'Progress', field: 'progress_pct', width: 80, pinned: 'left', lockPinned: true, type: 'numericColumn',
-        valueFormatter: (p: ValueFormatterParams) => `${(p.value as number).toFixed(1)}%`,
+  // Build left columns from wbsColumns config (same as DailyGridView)
+  const leftCols = useMemo<ColDef[]>(() => {
+    const cols: ColDef[] = [];
+    const visibleCols = wbsColumns.filter((c) => c.visible);
+
+    for (const col of visibleCols) {
+      switch (col.key) {
+        case 'wbs_number':
+          cols.push({
+            headerName: '#', field: 'wbs_number', width: col.width,
+            pinned: 'left', lockPinned: true,
+            cellStyle: (p: CellClassParams) => ({ color: '#6b7280', fontWeight: p.data?.is_summary ? 700 : 400, ...sumBg(p) }),
+          });
+          break;
+        case 'wbs_code':
+          cols.push({
+            headerName: 'Code', field: 'wbs_code', width: col.width,
+            pinned: 'left', lockPinned: true, sortable: true, filter: true,
+            valueFormatter: (p: ValueFormatterParams) => {
+              if (!p.data) return '';
+              const { is_summary, wbs_code } = p.data as WeeklyRow;
+              const arrow = is_summary ? (collapsedGroups.has(p.data.id) ? '\u25B6 ' : '\u25BC ') : '';
+              return `${arrow}${wbs_code}`;
+            },
+            cellStyle: (p: CellClassParams) => ({
+              fontFamily: 'monospace', fontSize: '13px',
+              fontWeight: p.data?.is_summary ? 700 : 500,
+              cursor: p.data?.is_summary ? 'pointer' : 'default',
+              paddingLeft: `${(p.data?.level || 0) * 12 + 4}px`,
+              ...sumBg(p),
+            }),
+            onCellClicked: (p) => { if (p.data?.is_summary) toggleGroup(p.data.id); },
+          });
+          break;
+        case 'wbs_name':
+          cols.push({
+            headerName: 'Activity', field: 'wbs_name', width: col.width,
+            pinned: 'left', lockPinned: true,
+            cellStyle: (p: CellClassParams) => ({ fontWeight: p.data?.is_summary ? 700 : 400, fontSize: '13px', ...sumBg(p) }),
+          });
+          break;
+        case 'progress_pct':
+          cols.push({
+            headerName: '%', field: 'progress_pct', width: col.width,
+            pinned: 'left', lockPinned: true, type: 'numericColumn',
+            valueFormatter: (p: ValueFormatterParams) => {
+              const v = p.value as number;
+              return v === 0 ? '' : `${v.toFixed(0)}%`;
+            },
+            cellStyle: (p: CellClassParams) => {
+              const v = p.value as number;
+              const base = sumBg(p);
+              return v >= 100 ? { ...base, color: '#16a34a', fontWeight: 700 }
+                   : v >= 50 ? { ...base, color: '#2563eb', fontWeight: 600 }
+                   : { ...base, color: '#6b7280' };
+            },
+          });
+          break;
+        case 'total_actual_manday':
+          cols.push({
+            headerName: 'MD', field: 'total_actual_manday', width: col.width,
+            pinned: 'left', lockPinned: true, type: 'numericColumn',
+            valueFormatter: (p: ValueFormatterParams) => formatQuantity(p.value as number),
+            cellStyle: sumBg,
+          });
+          break;
+        case 'qty':
+          cols.push({
+            headerName: 'QTY', field: 'qty', width: col.width,
+            pinned: 'left', lockPinned: true, type: 'numericColumn',
+            valueFormatter: (p: ValueFormatterParams) => formatQuantity(p.value as number),
+            cellStyle: sumBg,
+          });
+          break;
+        case 'budget_eur':
+          cols.push({
+            headerName: 'Budget', field: 'budget_eur', width: col.width,
+            pinned: 'left', lockPinned: true, type: 'numericColumn',
+            valueFormatter: (p: ValueFormatterParams) => {
+              const v = p.value as number;
+              return v > 0 ? v.toLocaleString('de-DE', { maximumFractionDigits: 0 }) : '';
+            },
+            cellStyle: sumBg,
+          });
+          break;
+        default:
+          cols.push({
+            headerName: col.label, field: col.key, width: col.width,
+            pinned: 'left', lockPinned: true,
+            valueFormatter: (p: ValueFormatterParams) => {
+              const v = p.value;
+              if (v === null || v === undefined || v === '' || v === 0) return '';
+              if (typeof v === 'number') return formatQuantity(v);
+              return String(v);
+            },
+            cellStyle: sumBg,
+          });
+          break;
+      }
+    }
+    return cols;
+  }, [wbsColumns, collapsedGroups, toggleGroup]);
+
+  // Group week columns by month
+  const weekColumnGroups = useMemo<ColGroupDef[]>(() => {
+    const monthGroups = new Map<string, WeekColumn[]>();
+    for (const wc of weekColumns) {
+      if (!monthGroups.has(wc.monthKey)) monthGroups.set(wc.monthKey, []);
+      monthGroups.get(wc.monthKey)!.push(wc);
+    }
+
+    const groups: ColGroupDef[] = [];
+    for (const [monthKey, weeks] of monthGroups) {
+      const monthDate = parseISO(monthKey + '-01');
+      const monthLabel = format(monthDate, 'MMMM yyyy');
+
+      const children: ColDef[] = weeks.map((wc) => ({
+        headerName: wc.label, field: wc.key, width: 60, type: 'numericColumn',
+        headerClass: wc.key === currentWeekKey ? 'ag-header-cell-today' : '',
+        headerTooltip: `${wc.startDate} \u2014 ${wc.endDate}`,
+        valueFormatter: (p: ValueFormatterParams) => { const v = p.value as number; return v > 0 ? v.toFixed(1) : ''; },
         cellStyle: (p: CellClassParams) => {
-          const v = p.value as number;
-          const base = sumBg(p);
-          return v >= 100 ? { ...base, color: '#16a34a', fontWeight: 700 }
-               : v >= 50 ? { ...base, color: '#2563eb', fontWeight: 600 }
-               : { ...base, color: '#6b7280' };
+          if (p.data?.is_summary) return { backgroundColor: '#F0F0F0' };
+          const actual = (p.value as number) || 0;
+          const planned = (p.data?.[`_p_${wc.key}`] as number) || 0;
+          let bg = '#FFFFFF';
+          if (!actual && !planned) bg = '#F5F5F5';
+          else if (actual > planned) bg = '#C8E6C9';
+          else if (actual < planned && planned > 0) bg = '#FFCDD2';
+          return {
+            backgroundColor: bg, fontWeight: actual > 0 ? 600 : 400, fontSize: '11px',
+            textAlign: 'center' as const,
+            ...(wc.key === currentWeekKey ? { borderLeft: '2px solid #2563eb', borderRight: '2px solid #2563eb' } : {}),
+          };
         },
-      },
-    ];
+      }));
 
-    const weekCols: ColDef[] = weekColumns.map((wc) => ({
-      headerName: wc.label, field: wc.key, width: 65, type: 'numericColumn',
-      headerClass: wc.key === currentWeekKey ? 'ag-header-cell-today' : '',
-      headerTooltip: `${wc.startDate} — ${wc.endDate}`,
-      valueFormatter: (p: ValueFormatterParams) => { const v = p.value as number; return v > 0 ? v.toFixed(1) : ''; },
-      cellStyle: (p: CellClassParams) => {
-        if (p.data?.is_summary) return { backgroundColor: '#F0F0F0' };
-        const actual = (p.value as number) || 0;
-        const planned = (p.data?.[`_p_${wc.key}`] as number) || 0;
-        let bg = '#FFFFFF';
-        if (!actual && !planned) bg = '#F5F5F5';
-        else if (actual > planned) bg = '#C8E6C9';
-        else if (actual < planned && planned > 0) bg = '#FFCDD2';
-        return {
-          backgroundColor: bg, fontWeight: actual > 0 ? 600 : 400, fontSize: '11px',
-          ...(wc.key === currentWeekKey ? { borderLeft: '2px solid #2563eb', borderRight: '2px solid #2563eb' } : {}),
-        };
-      },
-    }));
+      groups.push({
+        headerName: monthLabel,
+        headerClass: 'ag-header-group-month',
+        children,
+      });
+    }
 
-    return [...fixedCols, ...weekCols];
-  }, [weekColumns, collapsedGroups, toggleGroup, currentWeekKey]);
+    return groups;
+  }, [weekColumns, currentWeekKey]);
 
+  const columnDefs = useMemo<(ColDef | ColGroupDef)[]>(
+    () => [...leftCols, ...weekColumnGroups],
+    [leftCols, weekColumnGroups],
+  );
   const defaultColDef = useMemo<ColDef>(() => ({ resizable: true, suppressMovable: true }), []);
 
   if (!activeProjectId) {
@@ -268,27 +388,39 @@ export const WeeklyGridView: React.FC = () => {
   }
 
   return (
-    <div className="flex h-full flex-col gap-3">
+    <div className="flex h-full flex-col gap-2">
       <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-2">
         <div className="flex items-center gap-2">
           <Calendar className="h-5 w-5 text-blue-600" />
           <h2 className="text-sm font-semibold text-gray-800">Weekly Summary</h2>
+          <span className="text-xs text-gray-500">
+            Jan 2026 \u2014 Jul 2026 ({weekColumns.length} weeks)
+          </span>
         </div>
-        <span className="text-xs text-gray-500">
-          {project?.start_date ?? ''} to {project?.end_date ?? '2026-07-31'} ({weekColumns.length} weeks)
-        </span>
-      </div>
-
-      <div className="grid grid-cols-4 gap-3">
-        <KPICard label="Total Planned" value={formatQuantity(kpi.planned)} color="blue" />
-        <KPICard label="Total Actual" value={formatQuantity(kpi.actual)} color="green" />
-        <KPICard label="Variance" value={`${kpi.variance >= 0 ? '+' : ''}${formatQuantity(kpi.variance)}`} color={kpi.variance >= 0 ? 'green' : 'red'} />
-        <KPICard label="Avg Productivity" value={kpi.avgProductivity.toFixed(3)} color="indigo" />
+        <div className="flex items-center gap-3">
+          <div className="grid grid-cols-4 gap-2">
+            <KPIBadge label="Planned" value={formatQuantity(kpi.planned)} color="blue" />
+            <KPIBadge label="Actual" value={formatQuantity(kpi.actual)} color="green" />
+            <KPIBadge label="Variance" value={`${kpi.variance >= 0 ? '+' : ''}${formatQuantity(kpi.variance)}`} color={kpi.variance >= 0 ? 'green' : 'red'} />
+            <KPIBadge label="Prod." value={kpi.avgProductivity.toFixed(3)} color="indigo" />
+          </div>
+          <div className="relative">
+            <button
+              onClick={toggleColumnSettings}
+              className="flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
+              title="Configure columns"
+            >
+              <Settings2 className="h-3.5 w-3.5" />
+              Columns
+            </button>
+            {columnSettingsOpen && <ColumnSettings />}
+          </div>
+        </div>
       </div>
 
       <div className="ag-theme-alpine flex-1" style={{ width: '100%' }}>
         {isLoading ? (
-          <div className="flex h-full items-center justify-center text-gray-500">Loading...</div>
+          <div className="flex h-full items-center justify-center text-gray-500">Loading weekly data...</div>
         ) : (
           <AgGridReact
             rowData={rowData}
@@ -297,9 +429,10 @@ export const WeeklyGridView: React.FC = () => {
             animateRows={false}
             enableCellTextSelection
             getRowId={(p) => p.data.id}
-            headerHeight={36}
-            rowHeight={32}
+            headerHeight={32}
+            rowHeight={28}
             suppressScrollOnNewData
+            groupHeaderHeight={28}
           />
         )}
       </div>
@@ -307,13 +440,17 @@ export const WeeklyGridView: React.FC = () => {
   );
 };
 
-const KPICard: React.FC<{ label: string; value: string; color: string }> = ({ label, value, color }) => {
-  const bg: Record<string, string> = { blue: 'bg-blue-50', green: 'bg-green-50', red: 'bg-red-50', indigo: 'bg-indigo-50' };
-  const txt: Record<string, string> = { blue: 'text-blue-700', green: 'text-green-700', red: 'text-red-700', indigo: 'text-indigo-700' };
+const KPIBadge: React.FC<{ label: string; value: string; color: string }> = ({ label, value, color }) => {
+  const colors: Record<string, string> = {
+    blue: 'bg-blue-50 text-blue-700',
+    green: 'bg-green-50 text-green-700',
+    red: 'bg-red-50 text-red-700',
+    indigo: 'bg-indigo-50 text-indigo-700',
+  };
   return (
-    <div className={cn('rounded-lg border border-gray-200 p-3', bg[color] ?? 'bg-gray-50')}>
-      <p className="text-[10px] font-medium uppercase text-gray-500">{label}</p>
-      <p className={cn('mt-1 text-lg font-bold', txt[color] ?? 'text-gray-900')}>{value}</p>
+    <div className={cn('rounded px-2 py-1 text-center', colors[color] ?? 'bg-gray-50 text-gray-700')}>
+      <div className="text-[9px] font-medium uppercase">{label}</div>
+      <div className="text-xs font-bold">{value}</div>
     </div>
   );
 };
