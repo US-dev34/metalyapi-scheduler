@@ -75,6 +75,24 @@
     background-color: #dbeafe !important;
     font-weight: 600 !important;
   }
+
+  /* Saturday column header */
+  .ag-header-cell-saturday {
+    background-color: #fff8e1 !important;
+  }
+
+  /* Sunday column header */
+  .ag-header-cell-sunday {
+    background-color: #fce4ec !important;
+  }
+
+  /* KW (calendar week) group header */
+  .ag-header-group-kw {
+    background-color: #f1f5f9 !important;
+    font-weight: 600 !important;
+    font-size: 10px !important;
+    border-bottom: 1px solid #cbd5e1 !important;
+  }
 }
 
 @layer utilities {

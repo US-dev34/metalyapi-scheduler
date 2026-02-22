@@ -80,6 +80,11 @@ const defaultFilters: FilterState = {
   search: '',
   wbsLevels: [],
   showOnlyActive: true,
+  buildings: [],
+  statuses: [],
+  targetKw: '',
+  progressMin: null,
+  progressMax: null,
 };
 
 const todayRange = getWeekRange(new Date());

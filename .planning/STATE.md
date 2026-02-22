@@ -5,23 +5,22 @@
 See: .planning/PROJECT.md (updated 2026-02-21)
 
 **Core value:** Construction managers can see today's manpower allocation across all facade work items, edit it in real-time, and instantly know which items are behind schedule
-**Current focus:** Deployment — app is fully functional locally, needs Railway + Vercel deployment
+**Current focus:** Post-deployment enhancements — full-program grid views, configurable columns
 
 ## Current Position
 
-Phase: 5 of 5 (Production Deployment)
-Plan: All phases executed
-Status: App fully functional locally, deployment pending CLI auth
-Last activity: 2026-02-21 -- DB migrations run, WBS data imported, full smoke test passed
+Phase: 5 of 5 (Production Deployment) + Post-deploy enhancements
+Plan: All phases executed, now iterating on user feedback
+Status: App live in production, grid views enhanced
+Last activity: 2026-02-22 -- Full-program grid views (Jan-Jul 2026), configurable columns, 126 WBS items with extended fields
 
-Progress: [█████████░] 95%
+Progress: [██████████] 100% (core) + iterating
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5 phases
-- Average duration: ~20 min per phase
-- Total execution time: ~2 hours
+- Total plans completed: 5 phases + post-deploy enhancements
+- Total execution time: ~3 hours across sessions
 
 **By Phase:**
 
@@ -32,6 +31,8 @@ Progress: [█████████░] 95%
 | 3. Export & Import Pipeline | Done | b0c1975 |
 | 4. AI Intelligence Layer | Done | e2fa7e3 |
 | 5. Production Deployment | Done | 9c9f5a2 |
+| Post-deploy: WBS extended fields | Done | e04aef7 |
+| Post-deploy: Full-program grid views | Done | f9b5df1 |
 
 ## Accumulated Context
 
@@ -42,42 +43,50 @@ Progress: [█████████░] 95%
 - Auth conditional: enforced in production, optional in development
 - Forecast batch optimization: 2 queries + Python grouping instead of N+1
 - Railway for backend, Vercel for frontend
-- Backend db.py uses service_role key to bypass RLS (patched this session)
-- Supabase MCP added to .claude/settings.json for SQL execution
+- Backend db.py uses service_role key to bypass RLS
+- Full program range: Jan 1, 2026 - Jul 31, 2026 (hardcoded in uiStore)
+- WBS columns configurable via ColumnSettings panel (shared Daily/Weekly)
+- Month group headers for date/week columns
 
 ### Completed Todos
 
-- [x] Run ALL migrations (001-005) via Supabase SQL Editor
-- [x] Get SUPABASE_SERVICE_KEY from dashboard (legacy API keys)
+- [x] Run ALL migrations (001-006) via Supabase
+- [x] Get SUPABASE_SERVICE_KEY from dashboard
 - [x] Create admin user (admin@metalyapi.com / MetalYapi2026!)
 - [x] Add admin to project_members for E2NS
-- [x] Import 86 WBS items from Excel
+- [x] Import 126 WBS items with full extended data
 - [x] Smoke test: Login, Grid, Cell Edit, Save, Views, Export
+- [x] Deploy backend to Railway
+- [x] Deploy frontend to Vercel
+- [x] Production smoke test (all endpoints 200)
+- [x] Add 13 extended WBS fields (migration 006 + schemas)
+- [x] Full-program daily grid view (Jan-Jul 2026, grouped by month)
+- [x] Full-program weekly grid view (KW01-KW31, grouped by month)
+- [x] Configurable WBS columns (ColumnSettings panel)
 
 ### Pending Todos
 
-- Deploy backend to Railway (needs `railway login`)
-- Deploy frontend to Vercel (needs `vercel login`)
-- Set CLAUDE_API_KEY for Chat/AI features
-- Full production smoke test after deploy
-
-### Blockers/Concerns
-
-- Railway/Vercel CLIs need interactive login (can't be automated)
-- CLAUDE_API_KEY empty — Chat NLP and AI features won't work without it
-- Port 8000 occupied by stale process — backend runs on 8001 locally
+- Set CLAUDE_API_KEY in Railway env vars for Chat/AI features
+- Monitor daily view performance with 212-day range
 
 ### Key Identifiers
 
 - Supabase project ref: tfcmfbfnvrtsfqevwsko
 - Admin user ID: 90b03855-ce4d-445d-bb92-4f383eb68634
-- Admin email: admin@metalyapi.com
+- Admin email: admin@metalyapi.com / MetalYapi2026!
 - E2NS project ID: 5f0fc90a-00b7-4cf7-aaba-22dde8118fa1
-- Backend: http://localhost:8001
-- Frontend: http://localhost:5173
+- GitHub: US-dev34/metalyapi-scheduler (public)
+- Backend: https://backend-api-production-d0fb.up.railway.app
+- Frontend: https://frontend-delta-ebon-85.vercel.app
+- Railway project: cd05cfa5-f4ba-42c8-8fc9-cbaca3d6f35b
+- Railway service: c6c5815b-8a5e-4c4b-95c6-bbd0f6fd2fc4
+- Railway token: [REDACTED - see .env]
+- Vercel token: [REDACTED - see .env]
+- Vercel team: us-dev34s-projects
+- Vercel project: prj_qZAilzqGsZVz39BmIuFcs4wROkQx
 
 ## Session Continuity
 
-Last session: 2026-02-21
-Stopped at: Deployment blocked by CLI auth — all local features verified
+Last session: 2026-02-22
+Stopped at: Full-program grid views deployed, user may request further refinements
 Resume file: .planning/phases/05-production-deployment/.continue-here.md

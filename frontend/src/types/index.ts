@@ -19,6 +19,11 @@ export interface FilterState {
   search: string;
   wbsLevels: number[];
   showOnlyActive: boolean;
+  buildings: string[];
+  statuses: string[];
+  targetKw: string;
+  progressMin: number | null;
+  progressMax: number | null;
 }
 
 // ----- Project Types (IC-001: projects table) -----

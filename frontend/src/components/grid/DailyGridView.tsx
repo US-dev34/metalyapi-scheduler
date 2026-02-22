@@ -10,7 +10,7 @@ import type {
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { Settings2 } from 'lucide-react';
-import { format, parseISO, getISOWeek } from 'date-fns';
+import { format, parseISO, getISOWeek, getISOWeekYear } from 'date-fns';
 
 import { useUIStore } from '@/stores/uiStore';
 import { useProjectStore } from '@/stores/projectStore';
@@ -24,6 +24,13 @@ import { getCellStatus, getCellColor } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
 const DEBOUNCE_MS = 500;
+
+// Background colors for day types
+const DAY_BG = {
+  weekday: '#FFFFFF',
+  saturday: '#FFF8E1',   // warm amber tint
+  sunday: '#FCE4EC',     // soft rose tint
+};
 
 interface GridRow {
   id: string;
@@ -55,11 +62,17 @@ interface GridRow {
   [key: string]: unknown;
 }
 
+function getWeekKey(dateStr: string): string {
+  const d = parseISO(dateStr);
+  return `${getISOWeekYear(d)}-KW${String(getISOWeek(d)).padStart(2, '0')}`;
+}
+
 export const DailyGridView: React.FC = () => {
   const programRange = useUIStore((s) => s.programRange);
   const wbsColumns = useUIStore((s) => s.wbsColumns);
   const columnSettingsOpen = useUIStore((s) => s.columnSettingsOpen);
   const toggleColumnSettings = useUIStore((s) => s.toggleColumnSettings);
+  const filters = useUIStore((s) => s.filters);
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const pendingUpdates = useRef<AllocationCell[]>([]);
   const debounceTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -88,7 +101,7 @@ export const DailyGridView: React.FC = () => {
     return map;
   }, [wbsItems]);
 
-  // Build rows with hierarchy + date cell data + extended fields
+  // Build rows with hierarchy + date cell data + extended fields + week/month aggregates
   const allRows = useMemo<GridRow[]>(() => {
     if (!matrixData) return [];
     const { wbs_items: progressItems, date_range, matrix } = matrixData as DailyMatrixResponse;
@@ -131,13 +144,34 @@ export const DailyGridView: React.FC = () => {
         status: info?.status || '', scope: info?.scope || '',
         nta_ref: info?.nta_ref || '', notes: info?.notes || '',
       };
+
+      // Per-week and per-month aggregates
+      const weekSums: Record<string, number> = {};
+      const monthSums: Record<string, number> = {};
       const wbsMatrix = matrix[wbs.id] || {};
+
       for (const d of date_range) {
         const cell: CellData = wbsMatrix[d] || { planned: 0, actual: 0, qty_done: 0, is_future: false };
         row[d] = cell.actual;
         row[`_p_${d}`] = cell.planned;
         row[`_f_${d}`] = cell.is_future ? 1 : 0;
+
+        // Aggregate to week
+        const wk = getWeekKey(d);
+        weekSums[wk] = (weekSums[wk] || 0) + cell.actual;
+
+        // Aggregate to month
+        const mk = d.substring(0, 7);
+        monthSums[mk] = (monthSums[mk] || 0) + cell.actual;
       }
+
+      for (const [wk, total] of Object.entries(weekSums)) {
+        row[`_wk_${wk}`] = total;
+      }
+      for (const [mk, total] of Object.entries(monthSums)) {
+        row[`_mo_${mk}`] = total;
+      }
+
       rows.push(row);
     }
 
@@ -170,10 +204,64 @@ export const DailyGridView: React.FC = () => {
     return rows;
   }, [matrixData, wbsItems, wbsLookup, wbsCodeById]);
 
-  const rowData = useMemo(() =>
-    allRows.filter(row => !row.parent_id || !collapsedGroups.has(row.parent_id)),
-    [allRows, collapsedGroups]
-  );
+  // Apply filters + group collapse
+  const rowData = useMemo(() => {
+    let filtered = allRows;
+
+    // Group collapse
+    filtered = filtered.filter(row => !row.parent_id || !collapsedGroups.has(row.parent_id));
+
+    // Search filter
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      filtered = filtered.filter(row =>
+        row.is_summary ||
+        row.wbs_code.toLowerCase().includes(q) ||
+        row.wbs_name.toLowerCase().includes(q)
+      );
+    }
+
+    // WBS levels filter
+    if (filters.wbsLevels.length > 0) {
+      filtered = filtered.filter(row => row.is_summary || filters.wbsLevels.includes(row.level));
+    }
+
+    // Building filter
+    if (filters.buildings.length > 0) {
+      filtered = filtered.filter(row =>
+        row.is_summary || filters.buildings.includes(row.building)
+      );
+    }
+
+    // Status filter
+    if (filters.statuses.length > 0) {
+      filtered = filtered.filter(row =>
+        row.is_summary || filters.statuses.includes(row.status)
+      );
+    }
+
+    // Target KW filter
+    if (filters.targetKw) {
+      const q = filters.targetKw.toLowerCase();
+      filtered = filtered.filter(row =>
+        row.is_summary || row.target_kw.toLowerCase().includes(q)
+      );
+    }
+
+    // Progress range
+    if (filters.progressMin !== null) {
+      filtered = filtered.filter(row =>
+        row.is_summary || row.progress_pct >= (filters.progressMin ?? 0)
+      );
+    }
+    if (filters.progressMax !== null) {
+      filtered = filtered.filter(row =>
+        row.is_summary || row.progress_pct <= (filters.progressMax ?? 100)
+      );
+    }
+
+    return filtered;
+  }, [allRows, collapsedGroups, filters]);
 
   const toggleGroup = useCallback((id: string) => {
     setCollapsedGroups(prev => {
@@ -282,7 +370,6 @@ export const DailyGridView: React.FC = () => {
           });
           break;
         default:
-          // Generic text/numeric columns from extended fields
           cols.push({
             headerName: col.label, field: col.key, width: col.width,
             pinned: 'left', lockPinned: true,
@@ -300,67 +387,141 @@ export const DailyGridView: React.FC = () => {
     return cols;
   }, [wbsColumns, collapsedGroups, toggleGroup]);
 
-  // Group date columns by month for a clean header structure
+  // Build date columns grouped by Month -> KW -> days (collapsible)
   const dateColumnGroups = useMemo<(ColDef | ColGroupDef)[]>(() => {
     if (!matrixData) return [];
     const dateRange = (matrixData as DailyMatrixResponse).date_range;
     if (!dateRange.length) return [];
 
-    // Group dates by month
-    const monthGroups = new Map<string, string[]>();
+    // Group dates by month, then by KW within each month
+    const monthMap = new Map<string, Map<string, string[]>>();
+
     for (const d of dateRange) {
-      const monthKey = d.substring(0, 7); // "2026-01"
-      if (!monthGroups.has(monthKey)) monthGroups.set(monthKey, []);
-      monthGroups.get(monthKey)!.push(d);
+      const monthKey = d.substring(0, 7);
+      const wkKey = getWeekKey(d);
+
+      if (!monthMap.has(monthKey)) monthMap.set(monthKey, new Map());
+      const kwMap = monthMap.get(monthKey)!;
+      if (!kwMap.has(wkKey)) kwMap.set(wkKey, []);
+      kwMap.get(wkKey)!.push(d);
     }
 
-    const groups: ColGroupDef[] = [];
-    for (const [monthKey, dates] of monthGroups) {
+    const monthGroups: ColGroupDef[] = [];
+
+    for (const [monthKey, kwMap] of monthMap) {
       const monthDate = parseISO(monthKey + '-01');
       const monthLabel = format(monthDate, 'MMMM yyyy');
 
-      const children: ColDef[] = dates.map((d) => ({
-        headerName: formatDayHeader(d),
-        field: d,
-        width: 52,
-        editable: (params: CellClassParams) => !params.data?.is_summary,
+      // Month summary column (visible when month collapsed)
+      const monthSummaryCol: ColDef = {
+        headerName: format(monthDate, 'MMM'),
+        field: `_mo_${monthKey}`,
+        width: 60,
+        columnGroupShow: 'closed',
         type: 'numericColumn',
-        headerClass: isToday(d) ? 'ag-header-cell-today' : '',
-        headerTooltip: format(parseISO(d), 'EEEE, d MMMM yyyy'),
-        valueFormatter: (params: ValueFormatterParams) => {
-          const actual = (params.value as number) || 0;
-          const planned = (params.data?.[`_p_${d}`] as number) || 0;
-          if (actual > 0) return String(actual);
-          if (planned > 0) return `[${planned}]`;
-          return '';
+        valueFormatter: (p: ValueFormatterParams) => {
+          const v = p.value as number;
+          return v > 0 ? v.toFixed(1) : '';
         },
-        cellStyle: (params: CellClassParams) => {
-          if (params.data?.is_summary) return { backgroundColor: '#F0F0F0' };
-          const actual = (params.value as number) || 0;
-          const planned = (params.data?.[`_p_${d}`] as number) || 0;
-          const isFuture = (params.data?.[`_f_${d}`] as number) === 1;
-          const bg = getCellColor(getCellStatus({ planned, actual, qty_done: 0, is_future: isFuture }));
-          // Weekend columns get a subtle striped look
-          const dayOfWeek = parseISO(d).getDay();
-          const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-          return {
-            backgroundColor: isWeekend && !actual && !planned ? '#ECECEC' : bg,
-            fontWeight: actual > 0 ? 600 : 400,
-            color: actual > 0 ? '#111827' : planned > 0 ? '#9ca3af' : '#d1d5db',
-            textAlign: 'center' as const, fontSize: '11px',
-            ...(isToday(d) ? { borderLeft: '2px solid #2563eb', borderRight: '2px solid #2563eb' } : {}),
-          };
-        },
-      }));
+        cellStyle: (p: CellClassParams) => ({
+          backgroundColor: p.data?.is_summary ? '#F0F0F0' : '#f8fafc',
+          fontWeight: 600, fontSize: '11px', textAlign: 'center' as const,
+        }),
+      };
 
-      groups.push({
+      // KW sub-groups (visible when month expanded)
+      const kwGroups: (ColDef | ColGroupDef)[] = [];
+
+      for (const [wkKey, dates] of kwMap) {
+        const kwLabel = wkKey.split('-')[1]; // "KW01"
+
+        // KW summary column (visible when KW collapsed)
+        const kwSummaryCol: ColDef = {
+          headerName: kwLabel,
+          field: `_wk_${wkKey}`,
+          width: 60,
+          columnGroupShow: 'closed',
+          type: 'numericColumn',
+          valueFormatter: (p: ValueFormatterParams) => {
+            const v = p.value as number;
+            return v > 0 ? v.toFixed(1) : '';
+          },
+          cellStyle: (p: CellClassParams) => ({
+            backgroundColor: p.data?.is_summary ? '#F0F0F0' : '#f1f5f9',
+            fontWeight: 600, fontSize: '11px', textAlign: 'center' as const,
+          }),
+        };
+
+        // Individual day columns (visible when KW expanded)
+        const dayChildren: ColDef[] = dates.map((d) => {
+          const dayOfWeek = parseISO(d).getDay();
+          const isSaturday = dayOfWeek === 6;
+          const isSunday = dayOfWeek === 0;
+          const headerClass = isToday(d) ? 'ag-header-cell-today'
+            : isSaturday ? 'ag-header-cell-saturday'
+            : isSunday ? 'ag-header-cell-sunday' : '';
+
+          return {
+            headerName: formatDayHeader(d),
+            field: d,
+            width: 52,
+            editable: (params: CellClassParams) => !params.data?.is_summary,
+            type: 'numericColumn',
+            columnGroupShow: 'open' as const,
+            headerClass,
+            headerTooltip: format(parseISO(d), 'EEEE, d MMMM yyyy'),
+            valueFormatter: (params: ValueFormatterParams) => {
+              const actual = (params.value as number) || 0;
+              const planned = (params.data?.[`_p_${d}`] as number) || 0;
+              if (actual > 0) return String(actual);
+              if (planned > 0) return `[${planned}]`;
+              return '';
+            },
+            cellStyle: (params: CellClassParams) => {
+              if (params.data?.is_summary) return { backgroundColor: '#F0F0F0' };
+              const actual = (params.value as number) || 0;
+              const planned = (params.data?.[`_p_${d}`] as number) || 0;
+              const isFuture = (params.data?.[`_f_${d}`] as number) === 1;
+
+              // Determine background: cell status color or day-type color
+              let bg: string;
+              if (actual > 0 || planned > 0) {
+                bg = getCellColor(getCellStatus({ planned, actual, qty_done: 0, is_future: isFuture }));
+              } else {
+                bg = isSunday ? DAY_BG.sunday
+                   : isSaturday ? DAY_BG.saturday
+                   : DAY_BG.weekday;
+              }
+
+              return {
+                backgroundColor: bg,
+                fontWeight: actual > 0 ? 600 : 400,
+                color: actual > 0 ? '#111827' : planned > 0 ? '#9ca3af' : '#d1d5db',
+                textAlign: 'center' as const, fontSize: '11px',
+                ...(isToday(d) ? { borderLeft: '2px solid #2563eb', borderRight: '2px solid #2563eb' } : {}),
+              };
+            },
+          };
+        });
+
+        kwGroups.push({
+          headerName: kwLabel,
+          headerClass: 'ag-header-group-kw',
+          columnGroupShow: 'open',
+          openByDefault: true,
+          children: [kwSummaryCol, ...dayChildren],
+        } as ColGroupDef);
+      }
+
+      monthGroups.push({
         headerName: monthLabel,
         headerClass: 'ag-header-group-month',
-        children,
+        openByDefault: true,
+        children: [monthSummaryCol, ...kwGroups],
       });
     }
 
-    return groups;
+    return monthGroups;
   }, [matrixData]);
 
   const columnDefs = useMemo<(ColDef | ColGroupDef)[]>(
@@ -419,7 +580,7 @@ export const DailyGridView: React.FC = () => {
           rowHeight={28}
           suppressScrollOnNewData
           stopEditingWhenCellsLoseFocus
-          groupHeaderHeight={28}
+          groupHeaderHeight={24}
         />
       </div>
     </div>

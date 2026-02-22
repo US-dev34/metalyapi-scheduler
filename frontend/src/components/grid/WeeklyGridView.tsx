@@ -79,6 +79,7 @@ export const WeeklyGridView: React.FC = () => {
   const wbsColumns = useUIStore((s) => s.wbsColumns);
   const columnSettingsOpen = useUIStore((s) => s.columnSettingsOpen);
   const toggleColumnSettings = useUIStore((s) => s.toggleColumnSettings);
+  const filters = useUIStore((s) => s.filters);
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
@@ -154,6 +155,7 @@ export const WeeklyGridView: React.FC = () => {
       // Aggregate daily data into weeks
       const wbsMatrix = matrix[wbs.id] || {};
       const weekSums: Record<string, { planned: number; actual: number }> = {};
+      const monthSums: Record<string, number> = {};
       for (const wc of weekColumns) weekSums[wc.key] = { planned: 0, actual: 0 };
 
       for (const d of date_range) {
@@ -167,12 +169,18 @@ export const WeeklyGridView: React.FC = () => {
             totalActual += cell.actual;
             totalQtyDone += cell.qty_done;
           }
+          // Month aggregates
+          const mk = d.substring(0, 7);
+          monthSums[mk] = (monthSums[mk] || 0) + cell.actual;
         }
       }
 
       for (const wc of weekColumns) {
         row[wc.key] = weekSums[wc.key].actual;
         row[`_p_${wc.key}`] = weekSums[wc.key].planned;
+      }
+      for (const [mk, total] of Object.entries(monthSums)) {
+        row[`_mo_${mk}`] = total;
       }
       rows.push(row);
     }
@@ -212,10 +220,40 @@ export const WeeklyGridView: React.FC = () => {
     };
   }, [matrixData, weekColumns, wbsItems, wbsLookup, wbsCodeById]);
 
-  const rowData = useMemo(() =>
-    allRows.filter(row => !row.parent_id || !collapsedGroups.has(row.parent_id)),
-    [allRows, collapsedGroups]
-  );
+  // Apply filters + group collapse
+  const rowData = useMemo(() => {
+    let filtered = allRows;
+
+    filtered = filtered.filter(row => !row.parent_id || !collapsedGroups.has(row.parent_id));
+
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      filtered = filtered.filter(row =>
+        row.is_summary || row.wbs_code.toLowerCase().includes(q) || row.wbs_name.toLowerCase().includes(q)
+      );
+    }
+    if (filters.wbsLevels.length > 0) {
+      filtered = filtered.filter(row => row.is_summary || filters.wbsLevels.includes(row.level));
+    }
+    if (filters.buildings.length > 0) {
+      filtered = filtered.filter(row => row.is_summary || filters.buildings.includes(row.building));
+    }
+    if (filters.statuses.length > 0) {
+      filtered = filtered.filter(row => row.is_summary || filters.statuses.includes(row.status));
+    }
+    if (filters.targetKw) {
+      const q = filters.targetKw.toLowerCase();
+      filtered = filtered.filter(row => row.is_summary || row.target_kw.toLowerCase().includes(q));
+    }
+    if (filters.progressMin !== null) {
+      filtered = filtered.filter(row => row.is_summary || row.progress_pct >= (filters.progressMin ?? 0));
+    }
+    if (filters.progressMax !== null) {
+      filtered = filtered.filter(row => row.is_summary || row.progress_pct <= (filters.progressMax ?? 100));
+    }
+
+    return filtered;
+  }, [allRows, collapsedGroups, filters]);
 
   const toggleGroup = useCallback((id: string) => {
     setCollapsedGroups(prev => {
@@ -230,7 +268,7 @@ export const WeeklyGridView: React.FC = () => {
 
   const currentWeekKey = getWeekKey(format(new Date(), 'yyyy-MM-dd'));
 
-  // Build left columns from wbsColumns config (same as DailyGridView)
+  // Build left columns from wbsColumns config
   const leftCols = useMemo<ColDef[]>(() => {
     const cols: ColDef[] = [];
     const visibleCols = wbsColumns.filter((c) => c.visible);
@@ -333,7 +371,7 @@ export const WeeklyGridView: React.FC = () => {
     return cols;
   }, [wbsColumns, collapsedGroups, toggleGroup]);
 
-  // Group week columns by month
+  // Group week columns by month (collapsible)
   const weekColumnGroups = useMemo<ColGroupDef[]>(() => {
     const monthGroups = new Map<string, WeekColumn[]>();
     for (const wc of weekColumns) {
@@ -346,8 +384,27 @@ export const WeeklyGridView: React.FC = () => {
       const monthDate = parseISO(monthKey + '-01');
       const monthLabel = format(monthDate, 'MMMM yyyy');
 
+      // Month summary column (visible when collapsed)
+      const monthSummaryCol: ColDef = {
+        headerName: format(monthDate, 'MMM'),
+        field: `_mo_${monthKey}`,
+        width: 65,
+        columnGroupShow: 'closed',
+        type: 'numericColumn',
+        valueFormatter: (p: ValueFormatterParams) => {
+          const v = p.value as number;
+          return v > 0 ? v.toFixed(1) : '';
+        },
+        cellStyle: (p: CellClassParams) => ({
+          backgroundColor: p.data?.is_summary ? '#F0F0F0' : '#f8fafc',
+          fontWeight: 600, fontSize: '11px', textAlign: 'center' as const,
+        }),
+      };
+
+      // Week columns (visible when expanded)
       const children: ColDef[] = weeks.map((wc) => ({
         headerName: wc.label, field: wc.key, width: 60, type: 'numericColumn',
+        columnGroupShow: 'open' as const,
         headerClass: wc.key === currentWeekKey ? 'ag-header-cell-today' : '',
         headerTooltip: `${wc.startDate} \u2014 ${wc.endDate}`,
         valueFormatter: (p: ValueFormatterParams) => { const v = p.value as number; return v > 0 ? v.toFixed(1) : ''; },
@@ -370,7 +427,8 @@ export const WeeklyGridView: React.FC = () => {
       groups.push({
         headerName: monthLabel,
         headerClass: 'ag-header-group-month',
-        children,
+        openByDefault: true,
+        children: [monthSummaryCol, ...children],
       });
     }
 
@@ -432,7 +490,7 @@ export const WeeklyGridView: React.FC = () => {
             headerHeight={32}
             rowHeight={28}
             suppressScrollOnNewData
-            groupHeaderHeight={28}
+            groupHeaderHeight={24}
           />
         )}
       </div>
