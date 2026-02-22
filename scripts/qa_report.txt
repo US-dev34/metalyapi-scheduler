@@ -1,0 +1,59 @@
+======================================================================
+QA/QC REPORT — WBS Import v4
+Generated: 2026-02-22T23:36:51.781985
+======================================================================
+
+Project ID: 5f0fc90a-00b7-4cf7-aaba-22dde8118fa1
+Activities: 234
+Allocations: 814
+Leaf activities: 121
+Branch activities: 113
+Root nodes: 2 (1, 2)
+
+Level distribution:
+  L1: 2
+  L2: 9
+  L3: 49
+  L4: 84
+  L5: 55
+  L6: 35
+
+Allocation coverage:
+  Leaf activities with allocations: 71/121
+  Leaf activities without allocations: 50
+  Allocation codes not in activities: 0
+
+Date range: 2025-12-01 to 2026-05-30
+KW range: KW3 to KW51
+
+--- ERRORS (0) ---
+
+--- WARNINGS (0) ---
+
+--- HIERARCHY VALIDATION ---
+
+--- MANPOWER SUMMARY ---
+  Total baseline man-days: 3871
+  KW03: 162 man-days
+  KW04: 180 man-days
+  KW05: 192 man-days
+  KW06: 210 man-days
+  KW07: 204 man-days
+  KW08: 210 man-days
+  KW09: 210 man-days
+  KW10: 228 man-days
+  KW11: 264 man-days
+  KW12: 252 man-days
+  KW13: 264 man-days
+  KW14: 234 man-days
+  KW15: 188 man-days
+  KW16: 192 man-days
+  KW17: 192 man-days
+  KW18: 84 man-days
+  KW19: 72 man-days
+  KW20: 72 man-days
+  KW21: 60 man-days
+  KW22: 60 man-days
+  KW49: 102 man-days
+  KW50: 134 man-days
+  KW51: 105 man-days

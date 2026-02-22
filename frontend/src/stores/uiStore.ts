@@ -32,6 +32,13 @@ const DEFAULT_WBS_COLUMNS: ColumnConfig[] = [
   { key: 'scope', label: 'Scope', visible: false, width: 80 },
   { key: 'nta_ref', label: 'NTA Ref', visible: false, width: 80 },
   { key: 'notes', label: 'Notes', visible: false, width: 120 },
+  { key: 'tp_pos', label: 'TP Pos', visible: false, width: 80 },
+  { key: 'pkg', label: 'Package', visible: true, width: 70 },
+  { key: 'manpower', label: 'MP', visible: false, width: 55 },
+  { key: 'duration', label: 'Dur', visible: false, width: 55 },
+  { key: 'total_md', label: 'TMD', visible: false, width: 60 },
+  { key: 'responsible', label: 'Resp', visible: false, width: 90 },
+  { key: 'pmt_ref', label: 'Pmt', visible: false, width: 70 },
   { key: 'progress_pct', label: '%', visible: true, width: 55 },
   { key: 'total_actual_manday', label: 'MD', visible: true, width: 55 },
 ];

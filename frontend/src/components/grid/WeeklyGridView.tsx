@@ -48,6 +48,14 @@ interface WeeklyRow {
   scope: string;
   nta_ref: string;
   notes: string;
+  tp_pos: string;
+  pkg: string;
+  manpower: number;
+  duration: number;
+  total_md: number;
+  responsible: string;
+  pmt_ref: string;
+  sort_order: number;
   [key: string]: unknown;
 }
 
@@ -132,6 +140,11 @@ export const WeeklyGridView: React.FC = () => {
             budget_eur: item.budget_eur || 0, target_kw: item.target_kw || '',
             status: item.status || '', scope: item.scope || '',
             nta_ref: item.nta_ref || '', notes: item.notes || '',
+            tp_pos: item.tp_pos || '', pkg: item.pkg || '',
+            manpower: item.manpower || 0, duration: item.duration || 0,
+            total_md: item.total_md || 0, responsible: item.responsible || '',
+            pmt_ref: item.pmt_ref || '',
+            sort_order: item.sort_order ?? 0,
           });
         }
       }
@@ -150,6 +163,11 @@ export const WeeklyGridView: React.FC = () => {
         budget_eur: info?.budget_eur || 0, target_kw: info?.target_kw || '',
         status: info?.status || '', scope: info?.scope || '',
         nta_ref: info?.nta_ref || '', notes: info?.notes || '',
+        tp_pos: info?.tp_pos || '', pkg: info?.pkg || '',
+        manpower: info?.manpower || 0, duration: info?.duration || 0,
+        total_md: info?.total_md || 0, responsible: info?.responsible || '',
+        pmt_ref: info?.pmt_ref || '',
+        sort_order: info?.sort_order ?? 9999,
       };
 
       // Aggregate daily data into weeks
@@ -185,28 +203,22 @@ export const WeeklyGridView: React.FC = () => {
       rows.push(row);
     }
 
-    // Sort children under parents
-    rows.sort((a, b) => {
-      const ap = a.parent_id ? wbsCodeById.get(a.parent_id) || '' : '';
-      const bp = b.parent_id ? wbsCodeById.get(b.parent_id) || '' : '';
-      const ak = a.is_summary ? `${a.wbs_code}/` : `${ap}/${a.wbs_code}`;
-      const bk = b.is_summary ? `${b.wbs_code}/` : `${bp}/${b.wbs_code}`;
-      return ak.localeCompare(bk);
-    });
+    // Sort by sort_order (database order preserves proper hierarchy)
+    rows.sort((a, b) => (a.sort_order as number) - (b.sort_order as number));
 
-    // Compute numbering
-    let parentNum = 0;
+    // Compute hierarchical numbering (supports any depth)
     const childCounters: Record<string, number> = {};
+    let rootCounter = 0;
     for (const row of rows) {
-      if (row.is_summary || !row.parent_id) {
-        parentNum++;
-        row.wbs_number = String(parentNum);
-        childCounters[row.id] = 0;
+      if (!row.parent_id) {
+        rootCounter++;
+        row.wbs_number = String(rootCounter);
       } else {
-        const pid = row.parent_id;
+        const pid = row.parent_id as string;
         childCounters[pid] = (childCounters[pid] || 0) + 1;
         const parentRow = rows.find(r => r.id === pid);
-        row.wbs_number = `${parentRow?.wbs_number || parentNum}.${childCounters[pid]}`;
+        const pNum = parentRow?.wbs_number || '?';
+        row.wbs_number = `${pNum}.${childCounters[pid]}`;
       }
     }
 
@@ -224,7 +236,19 @@ export const WeeklyGridView: React.FC = () => {
   const rowData = useMemo(() => {
     let filtered = allRows;
 
-    filtered = filtered.filter(row => !row.parent_id || !collapsedGroups.has(row.parent_id));
+    // Group collapse — hide rows whose ANY ancestor is collapsed
+    if (collapsedGroups.size > 0) {
+      const rowById = new Map(filtered.map(r => [r.id, r]));
+      filtered = filtered.filter(row => {
+        let pid = row.parent_id as string | null;
+        while (pid) {
+          if (collapsedGroups.has(pid)) return false;
+          const parent = rowById.get(pid);
+          pid = parent?.parent_id as string | null ?? null;
+        }
+        return true;
+      });
+    }
 
     if (filters.search) {
       const q = filters.search.toLowerCase();
@@ -263,7 +287,7 @@ export const WeeklyGridView: React.FC = () => {
     });
   }, []);
 
-  const sumBg = (p: CellClassParams) =>
+  const sumBg = (p: CellClassParams): Record<string, string | number> =>
     p.data?.is_summary ? { backgroundColor: '#F0F0F0', fontWeight: 700 } : {};
 
   const currentWeekKey = getWeekKey(format(new Date(), 'yyyy-MM-dd'));

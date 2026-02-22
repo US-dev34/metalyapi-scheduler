@@ -72,6 +72,13 @@ export interface WBSItem {
   qty_int: number;
   done_int: number;
   rem_int: number;
+  tp_pos: string | null;
+  pkg: string | null;
+  manpower: number;
+  duration: number;
+  total_md: number;
+  responsible: string | null;
+  pmt_ref: string | null;
   children?: WBSItem[];
 }
 

@@ -35,7 +35,10 @@ export function formatDateAPI(date: Date): string {
 }
 
 export function formatDayHeader(dateStr: string): string {
-  return format(parseISO(dateStr), 'EEE dd', { locale: enUS });
+  const d = parseISO(dateStr);
+  const day = format(d, 'EEEEEE', { locale: enUS });
+  const num = format(d, 'd');
+  return `${day} ${num}`;
 }
 
 export function getWeekRange(date: Date): DateRange {
@@ -76,9 +79,9 @@ export function daysBetween(start: string, end: string): number {
 
 // ----- Number Formatting -----
 
-export function formatQuantity(value: number, decimals = 1): string {
+export function formatQuantity(value: number): string {
   if (value === 0) return '';
-  return value.toFixed(decimals);
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
 
 export function formatPercent(value: number): string {

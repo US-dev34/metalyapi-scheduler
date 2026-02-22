@@ -66,6 +66,13 @@ class WBSItemCreate(BaseModel):
     qty_int: float = 0.0
     done_int: float = 0.0
     rem_int: float = 0.0
+    tp_pos: str | None = None
+    pkg: str | None = None
+    manpower: float = 0.0
+    duration: float = 0.0
+    total_md: float = 0.0
+    responsible: str | None = None
+    pmt_ref: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -92,6 +99,13 @@ class WBSItemUpdate(BaseModel):
     qty_int: float | None = None
     done_int: float | None = None
     rem_int: float | None = None
+    tp_pos: str | None = None
+    pkg: str | None = None
+    manpower: float | None = None
+    duration: float | None = None
+    total_md: float | None = None
+    responsible: str | None = None
+    pmt_ref: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -120,6 +134,13 @@ class WBSItemResponse(BaseModel):
     qty_int: float = 0.0
     done_int: float = 0.0
     rem_int: float = 0.0
+    tp_pos: str | None = None
+    pkg: str | None = None
+    manpower: float = 0.0
+    duration: float = 0.0
+    total_md: float = 0.0
+    responsible: str | None = None
+    pmt_ref: str | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
     children: list[WBSItemResponse] = []

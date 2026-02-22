@@ -1,0 +1,235 @@
+wbs_code,description,tp_pos,package,building,nta_ref,status,budget_eur,target_kw,qty_total,qty_done,qty_remaining,manpower_per_day,duration_days,total_mandays,scope,responsible,payment_ref,source,level,parent_wbs,is_leaf,baseline_start,baseline_finish,baseline_working_days,baseline_total_md
+1,E2NS Contract Works,,E2NS,E2NS,,,,,,,,,,,,,,,1,,False,,,,
+1.0,Already Executed,,E2NS,E2NS,,DONE,382722.57,KW03,,,,,,,,,01.10,Pmt,2,1,False,,,,
+1.1,E2N — Remaining Works,,E2NS,E2N,,,,,,,,,,,,,,,2,1,False,,,,
+1.1.1,FT07/FT08/FT11/FT15 East,,E2NS,E2N,,,14255.01,KW11,,,,,,,,,02.11,Pmt,3,1.1,False,,,,
+1.1.1.1,FT07 Punch Window East,,E2NS,E2N,,,,KW11,7,,7,,,,EXT,,,,4,1.1.1,False,,,,
+1.1.1.1.1,FT-07 Glass Rotation+Gasket,1.5.0,E2NS,,,,,KW11,7,,7,3,6,18,,MYA,,TP,5,1.1.1.1,True,2026-01-19,2026-01-24,6,18
+1.1.1.2,FT08 Punch Window East,,E2NS,E2N,,,,KW11,228,121,107,,,,EXT+INT,,,,4,1.1.1,False,,,,
+1.1.1.2.1,E2N Courtyard Windows Inside,1.2.0,E2NS,,,,,KW11,,,,,,160,INT,,,TP,5,1.1.1.2,False,,,,
+1.1.1.2.1.1,Dismantling of Drywall,1.2.1,E2NS,,,,,KW11,76,76,,10,8,66,,MYA,,TP,6,1.1.1.2.1,True,2025-12-01,2025-12-19,17,66
+1.1.1.2.1.2,Application of New Membrane,1.2.2,E2NS,,,,,KW11,76,45,31,10,8,44,,MYA,,TP,6,1.1.1.2.1,True,2025-12-08,2025-12-19,11,44
+1.1.1.2.1.3,Installation of New Drywall,1.2.3,E2NS,,,,,KW11,76,,76,,,,,XXX,,TP,6,1.1.1.2.1,True,,,,
+1.1.1.3,FT11 East Facade,,E2NS,E2N,,,,KW11,,,,,,,,,,,4,1.1.1,False,,,,
+1.1.1.4,FT15 East Remaining,,E2NS,E2N,,,,KW11,1,1,,,,,EXT,,,,4,1.1.1,False,,,,
+1.1.1.4.1,E2N East Stone FT15 Detail,1.10.0,E2NS,,,,,KW11,1,1,,2,6,12,,MYA,,TP,5,1.1.1.4,True,2025-12-01,2025-12-06,6,12
+1.1.2,FT15 E2N (N+W) + Terminal Cable,,E2NS,E2N,NTA060,,51428.01,KW09,,,,,,,,,02.12,Pmt,3,1.1,False,,,,
+1.1.2.1,FT15 E2N North,,E2NS,E2N,,,,KW09,,,,,,,,,,,4,1.1.2,False,,,,
+1.1.2.2,FT15 E2N West,,E2NS,E2N,,,,KW09,,,,,,,,,,,4,1.1.2,False,,,,
+1.1.2.3,Terminal Cable Canals,,E2NS,E2N,NTA060,,,KW09,,,,,,,,,,,4,1.1.2,False,,,,
+1.1.2.3.1,Terminal Cable Exec,4.1.0,E2NS,,,,,KW09,,,,,,24,,,,TP,5,1.1.2.3,False,,,,
+1.1.2.3.1.1,New Design,4.1.1,E2NS,,,,,KW09,,,,,,,,MYA,,TP,6,1.1.2.3.1,True,,,,
+1.1.2.3.1.2,Approval SOB/URW,4.1.2,E2NS,,,,,KW09,,,,,,,,URW,,TP,6,1.1.2.3.1,True,,,,
+1.1.2.3.1.3,Procurement+Mfg,4.1.3,E2NS,,,,,KW09,10,,10,,,,,MYA,,TP,6,1.1.2.3.1,True,,,,
+1.1.2.3.1.4,Installation,4.1.4,E2NS,,,,,KW09,10,,10,2,12,24,,MYA,,TP,6,1.1.2.3.1,True,,,,
+1.1.3,Lochfenster E2N,,E2NS,E2N,,,22479.63,KW21,624,8,616,,,,,,02.13,Pmt,3,1.1,False,,,,
+1.1.3.1,E2N Outside Windows,1.1.0,E2NS,,,,,KW21,,,,,,540,EXT,,,TP,4,1.1.3,False,,,,
+1.1.3.1.1,Dismantling Drywall+Al,1.1.1,E2NS,,,,,KW21,156,8,148,2,125,248,,MYA,,TP,5,1.1.3.1,True,2025-12-08,2026-01-31,29,248
+1.1.3.1.2,New Membrane,1.1.2,E2NS,,,,,KW21,156,,156,2,80,164,,MYA,,TP,5,1.1.3.1,True,2025-12-15,2026-02-14,35,164
+1.1.3.1.3,Al. Sheet,1.1.3,E2NS,,,,,KW21,156,,156,2,65,132,,MYA,,TP,5,1.1.3.1,True,2026-01-19,2026-02-14,24,132
+1.1.3.1.4,New Drywall,1.1.4,E2NS,,,,,KW21,156,,156,,,,,XXX,,TP,5,1.1.3.1,True,,,,
+1.1.4,Türen E2N,,E2NS,E2N,,,25685.49,KW23,2,1,1,,,,,,02.14,Pmt,3,1.1,False,,,,
+1.1.4.1,Hörmann Door,1.4.0,E2NS,,,,,KW23,,,,,,24,,,,TP,4,1.1.4,False,,,,
+1.1.4.1.1,Steel structure,1.4.1,E2NS,,,,,KW23,1,1,,4,4,16,,MYA,,TP,5,1.1.4.1,True,,,,
+1.1.4.1.2,Door,1.4.2,E2NS,,,,,KW23,1,,1,4,2,8,,MYA,,TP,5,1.1.4.1,True,2025-12-11,2025-12-12,2,8
+1.1.4.2,Garage entrance Al (N),1.3.0,E2NS,,,,,KW23,1,1,,4,6,24,,MYA,,TP,4,1.1.4,True,2025-12-01,2025-12-06,6,24
+1.1.5,Canopy E2N Novotel,,E2NS,E2N,,,1306.13,KW21,60,,60,,,,,,02.15,Pmt,3,1.1,False,,,,
+1.1.5.1,FT-13 Canopy Al Sheet,1.8.0,E2NS,,,,,KW21,60,,60,4,6,24,,MYA,,TP,4,1.1.5,True,,,,
+1.1.6,FT18 E2N (Lamellen+Acoustic),,E2NS,E2N,,,,,,,,,,,,,,,3,1.1,False,,,,
+1.1.6.1,Lamellenfassade FT18,,E2NS,E2N,,,11045.64,KW15,2,,2,,,,,,02.16,Pmt,4,1.1.6,False,,,,
+1.1.6.1.1,FT-18 Execution,1.12.0,E2NS,,,,,KW15,,,,,,504,,,,TP,5,1.1.6.1,False,,,,
+1.1.6.1.1.1,Paint+bolt replace,1.12.1,E2NS,,,,,KW15,1,,1,10,48,480,,MYA,,TP,6,1.1.6.1.1,True,2026-02-02,2026-03-28,48,480
+1.1.6.1.1.2,1141 Parcel/parapet,1.12.2,E2NS,,,,,KW15,1,,1,4,6,24,,MYA,,TP,6,1.1.6.1.1,True,2026-02-09,2026-02-14,6,24
+1.1.6.2,Acoustic Panel MOS,,E2NS,E2N,NTA046,,95000,KW09,,,,,,,,,02.19,Pmt,4,1.1.6,False,,,,
+1.1.6.3,Acoustic Subframe MOS,,E2NS,E2N,NTA046,,114000,KW11,,,,,,,,,02.20,Pmt,4,1.1.6,False,,,,
+1.1.6.4,Acoustic Install+CatWalk,,E2NS,E2N,NTA046/047,,151496.06,KW15,,,,,,,,,02.21,Pmt,4,1.1.6,False,,,,
+1.1.6.4.1,Acoustic Roof Exec,1.13.0,E2NS,,,,,KW15,,,,,,252,,,,TP,5,1.1.6.4,False,,,,
+1.1.6.4.1.1,Steel Drilling+Paint,1.13.1,E2NS,,,,,KW15,1,,1,4,18,72,,MYA,,TP,6,1.1.6.4.1,True,2026-02-23,2026-03-14,18,72
+1.1.6.4.1.2,Secondary Steel,1.13.2,E2NS,,,,,KW15,1,,1,4,18,72,,MYA,,TP,6,1.1.6.4.1,True,2026-03-09,2026-03-28,18,72
+1.1.6.4.1.3,Modül install,1.13.3,E2NS,,,,,KW15,1,,1,6,18,108,,MYA,,TP,6,1.1.6.4.1,True,2026-03-16,2026-04-04,18,108
+1.1.7,Stabgeländer E2N,,E2NS,E2N,,,,KW21,,,,,,,,,02.17,Pmt,3,1.1,False,,,,
+1.1.7.1,RT02 Stabgeländer,,E2NS,E2N,,,,KW21,,,,,,,,,,,4,1.1.7,False,,,,
+1.1.7.1.1,RT02 Balustrade Module,1.7.0,E2NS,,,,,KW21,2,,2,4,3,12,,MYA,,TP,5,1.1.7.1,True,2026-01-26,2026-01-28,3,12
+1.1.7.2,Add. Steel Balustrade,,E2NS,E2N,NTA053,,15370,KW21,,,,,,,,,,,4,1.1.7,False,,,,
+1.1.8,Attikaabdeckungen E2N,,E2NS,E2N,,,,KW21,2,,2,,,,,,02.18,Pmt,3,1.1,False,,,,
+1.1.8.1,Attika Connection (E+N),1.9.0,E2NS,,,,,KW21,2,,2,2,4,12,,MYA,,TP,4,1.1.8,True,2026-01-29,2026-01-31,3,12
+1.1.9,Final Cleaning E2N,,E2NS,E2N,,,,KW23,9,,9,,,,,,02.22,Pmt,3,1.1,False,,,,
+1.1.9.1,Glass replacement,1.11.0,E2NS,,,,,KW23,9,,9,4,5,20,,MYA,,TP,4,1.1.9,True,,,,
+1.1.10,Documentation E2N,,E2NS,E2N,,,,KW23,,,,,,,,,,,3,1.1,False,,,,
+1.1.10.1,Documentation+Testing,1.14.0,E2NS,,,,,KW23,,,,,,,,,,TP,4,1.1.10,False,,,,
+1.1.10.1.1,WT01,1.14.1,E2NS,,,,,KW23,,,,,,,,MYA,,TP,5,1.1.10.1,True,,,,
+1.1.10.1.2,FT08,1.14.2,E2NS,,,,,KW23,,,,,,,,MYA,,TP,5,1.1.10.1,True,,,,
+1.1.10.1.3,FT07,1.14.3,E2NS,,,,,KW23,,,,,,,,MYA,,TP,5,1.1.10.1,True,,,,
+1.2,E2S — Remaining Works,,E2NS,E2S,,,,,,,,,,,,,,,2,1,False,,,,
+1.2.1,PR-Fassade FT02/03/10/14,,E2NS,E2S,,,35683.84,KW21,,,,,,,,,04.11,Pmt,3,1.2,False,,,,
+1.2.1.1,FT02,,E2NS,E2S,,,,KW21,340,334,6,,,,,,,,4,1.2.1,False,,,,
+1.2.1.1.1,FT-02 Outside,,E2NS,,,,,KW21,,,,,,,EXT,,,,5,1.2.1.1,False,,,,
+1.2.1.1.1.1,Zigzak West,2.1.1,E2NS,,,,,KW21,120,120,,3,1,3,,MYA,,TP,6,1.2.1.1.1,True,,,,
+1.2.1.1.1.2,Zigzak South,2.1.2,E2NS,,,,,KW21,80,77,3,2,3,6,,MYA,,TP,6,1.2.1.1.1,True,,,,
+1.2.1.1.1.3,Zigzak East,2.1.3,E2NS,,,,,KW21,140,137,3,2,3,6,,MYA,,TP,6,1.2.1.1.1,True,,,,
+1.2.1.1.2,FT-02 Inside,,E2NS,,,,,KW21,,,,,,,INT,,,,5,1.2.1.1,False,,,,
+1.2.1.1.2.1,Handle Install,4.4.1,E2NS,,,,,KW21,33,,33,3,12,36,,MYA,,TP,6,1.2.1.1.2,True,2026-04-13,2026-04-18,6,36
+1.2.1.1.2.2,Silicone/Gasket,4.4.2,E2NS,,,,,KW21,255,,255,2,6,12,,MYA,,TP,6,1.2.1.1.2,True,2026-03-30,2026-04-04,6,12
+1.2.1.1.2.3,Membrane Touchup,4.4.3,E2NS,,,,,KW21,79,,79,2,12,24,,MYA,,TP,6,1.2.1.1.2,True,2026-03-30,2026-04-11,12,24
+1.2.1.2,FT03,,E2NS,E2S,,,,KW21,241,,241,,,,,,,,4,1.2.1,False,,,,
+1.2.1.2.1,FT-03 Outside,,E2NS,,,,,KW21,,,,,,,EXT,,,,5,1.2.1.2,False,,,,
+1.2.1.2.1.1,Phonotherm+Flashing,3.3.1,E2NS,,,,,KW21,107,,107,2,18,36,,MYA,,TP,6,1.2.1.2.1,True,2026-03-16,2026-04-04,18,36
+1.2.1.2.1.2,Glass Pressure+Cover,3.3.2,E2NS,,,,,KW21,27,,27,5,6,30,,MYA,,TP,6,1.2.1.2.1,True,2026-03-30,2026-04-04,6,30
+1.2.1.2.1.3,Al sheet console,3.3.3,E2NS,,,,,KW21,38,,38,4,24,96,,MYA,,TP,6,1.2.1.2.1,True,2026-03-02,2026-03-14,12,96
+1.2.1.2.1.4,Top Attika (N),3.3.4,E2NS,,,,,KW21,39,,39,2,6,12,,MYA,,TP,6,1.2.1.2.1,True,2026-03-23,2026-04-01,6,12
+1.2.1.2.1.5,Steel behind stone (S),3.3.5,E2NS,,,,,KW21,30,,30,2,6,12,,MYA,,TP,6,1.2.1.2.1,True,2026-03-23,2026-04-01,6,12
+1.2.1.2.2,FT-03 Inside,,E2NS,,,,,KW21,,,,,,,INT,,,,5,1.2.1.2,False,,,,
+1.2.1.2.2.1,Al sheet install,4.7.1,E2NS,,,,,KW21,107,,107,2,12,24,,MYA,,TP,6,1.2.1.2.2,True,2026-04-13,2026-04-25,12,24
+1.2.1.2.2.2,Handle Install,4.7.2,E2NS,,,,,KW21,16,,16,2,6,12,,MYA,,TP,6,1.2.1.2.2,True,2026-04-20,2026-04-25,6,12
+1.2.1.2.2.3,Paint Touch up,4.7.3,E2NS,,,,,KW21,107,,107,2,24,48,,MYA,,TP,6,1.2.1.2.2,True,2026-03-30,2026-04-25,24,48
+1.2.1.2.3,FT03 Acoustic Inside,,E2NS,,,,,KW21,,,,,,,INT,,,,5,1.2.1.2,False,,,,
+1.2.1.2.3.1,Mock-up,4.10.1,E2NS,,,,,KW21,1,1,,2,2,4,,MYA,,TP,6,1.2.1.2.3,True,,,,
+1.2.1.2.3.2,Acoustic Testing,4.10.2,E2NS,,,,,KW21,1,,1,2,1,2,,MYA,,TP,6,1.2.1.2.3,True,,,,
+1.2.1.2.3.3,Approval SOB/DSI/URW,4.10.3,E2NS,,,,,KW21,,,,,,,,URW,,TP,6,1.2.1.2.3,True,,,,
+1.2.1.2.3.4,Procurement+Mfg,4.10.4,E2NS,,,,,KW21,20,,20,,,,,MYA,,TP,6,1.2.1.2.3,True,,,,
+1.2.1.2.3.5,Installation,4.10.5,E2NS,,,,,KW21,20,,20,2,18,36,,MYA,,TP,6,1.2.1.2.3,True,2026-04-27,2026-05-02,6,36
+1.2.1.3,FT10,,E2NS,E2S,,,,KW21,,,,,,,,,,,4,1.2.1,False,,,,
+1.2.1.4,FT14 Inside,,E2NS,E2S,,,,KW21,,,,,,,INT,,,,4,1.2.1,False,,,,
+1.2.1.4.1,Al sheet install,4.5.1,E2NS,,,,,KW21,43,,43,2,6,12,,MYA,,TP,5,1.2.1.4,True,2026-04-20,2026-04-25,6,12
+1.2.1.4.2,Handle Install,4.5.2,E2NS,,,,,KW21,43,,43,2,6,12,,MYA,,TP,5,1.2.1.4,True,2026-04-20,2026-04-25,6,12
+1.2.2,PR-Fassade FT05/06/09+Interkom,,E2NS,E2S,NTA063,,55655.92,KW15,,,,,,,,,04.12,Pmt,3,1.2,False,,,,
+1.2.2.1,FT05,,E2NS,E2S,,,,KW15,17,4,13,,,,,,,,4,1.2.2,False,,,,
+1.2.2.1.1,FT-05 Outside,,E2NS,,,,,KW15,,,,,,,EXT,,,,5,1.2.2.1,False,,,,
+1.2.2.1.1.1,Glass install,2.3.1,E2NS,,,,,KW15,5,,5,4,3,12,,MYA,,TP,6,1.2.2.1.1,True,2026-02-02,2026-02-04,3,12
+1.2.2.1.1.2,Membrane Big,2.3.2,E2NS,,,,,KW15,6,,6,3,30,81,,MYA,,TP,6,1.2.2.1.1,True,2026-01-12,2026-01-31,18,81
+1.2.2.1.1.3,Membrane Small,2.3.3,E2NS,,,,,KW15,6,4,2,3,18,27,,MYA,,TP,6,1.2.2.1.1,True,2026-01-19,2026-01-28,9,27
+1.2.2.1.2,FT-05 Inside,,E2NS,,,,,KW15,,,,,,,INT,,,,5,1.2.2.1,False,,,,
+1.2.2.1.2.1,Membrane Ctrl+Rect,4.6.1,E2NS,,,,,KW15,18,,18,2,12,24,,MYA,,TP,6,1.2.2.1.2,True,2026-04-13,2026-04-25,12,24
+1.2.2.2,FT06 Inside,,E2NS,E2S,,,,KW15,,,,,,,INT,,,,4,1.2.2,False,,,,
+1.2.2.2.1,Mock-up,4.9.1,E2NS,,,,,KW15,1,1,,2,2,4,,MYA,,TP,5,1.2.2.2,True,,,,
+1.2.2.2.2,Approval SOB/DSI/URW,4.9.2,E2NS,,,,,KW15,,,,,,,,URW,,TP,5,1.2.2.2,True,,,,
+1.2.2.2.3,Procurement+Mfg,4.9.3,E2NS,,,,,KW15,18,,18,,,,,MYA,,TP,5,1.2.2.2,True,,,,
+1.2.2.2.4,Installation,4.9.4,E2NS,,,,,KW15,18,,18,4,18,72,,MYA,,TP,5,1.2.2.2,True,2026-04-06,2026-04-25,18,72
+1.2.2.3,FT09,,E2NS,E2S,,,,KW15,,,,,,,,,,,4,1.2.2,False,,,,
+1.2.2.4,Interkom Glass,,E2NS,E2S,NTA063,,,KW15,6,,6,,,,,,,,4,1.2.2,False,,,,
+1.2.2.4.1,Interkom Glasses,2.11.0,E2NS,,,,,KW15,6,,6,4,6,24,,MYA,,TP,5,1.2.2.4,True,,,,
+1.2.3,Lochfenster WT04,,E2NS,E2S,,,47907.39,KW13,,,,,,,,,04.13,Pmt,3,1.2,False,,,,
+1.2.3.1,WT-04 Outside,,E2NS,,,,,KW13,,,,,,,EXT,,,,4,1.2.3,False,,,,
+1.2.3.1.1,Schüco adaptör,3.1.1,E2NS,,,,,KW13,62,,62,2,18,36,,MYA,,TP,5,1.2.3.1,True,2026-02-16,2026-03-07,18,36
+1.2.3.1.2,Stone Install,3.1.2,E2NS,,,,,KW13,53,,53,4,6,24,,MYA,,TP,5,1.2.3.1,True,2026-02-16,2026-02-21,6,24
+1.2.3.1.3,Glass install,3.1.3,E2NS,,,,,KW13,5,,5,4,6,24,,MYA,,TP,5,1.2.3.1,True,2026-02-23,2026-02-28,6,24
+1.2.3.1.4,Cocoon-Coord,3.1.4,E2NS,,,,,KW13,1,,1,2,12,24,,MYA,,TP,5,1.2.3.1,True,,,,
+1.2.3.2,WT-04 Inside,,E2NS,,,,,KW13,,,,,,,INT,,,,4,1.2.3,False,,,,
+1.2.3.2.1,Handle Install,4.2.1,E2NS,,,,,KW13,214,,214,2,24,48,,MYA,,TP,5,1.2.3.2,True,2026-03-30,2026-04-11,12,48
+1.2.3.2.2,Silicone/Gasket,4.2.2,E2NS,,,,,KW13,90,,90,2,12,24,,MYA,,TP,5,1.2.3.2,True,2026-04-09,2026-04-15,6,24
+1.2.3.2.3,Membrane Touchup,4.2.3,E2NS,,,,,KW13,90,,90,2,12,24,,MYA,,TP,5,1.2.3.2,True,2026-04-16,2026-04-22,6,24
+1.2.4,Lochfenster WT01.5/6/7,,E2NS,E2S,,,33140.47,KW15,,,,,,,,,04.14,Pmt,3,1.2,False,,,,
+1.2.4.1,WT01.5 Outside,,E2NS,,,,,KW15,,,,,,,EXT,,,,4,1.2.4,False,,,,
+1.2.4.1.1,Mängel EXT (W),2.2.1,E2NS,,,,,KW15,45,45,,,,,,,,TP,5,1.2.4.1,True,,,,
+1.2.4.1.2,Mängel IH (W),3.2.1,E2NS,,,,,KW15,33,33,,,,,,,,TP,5,1.2.4.1,True,,,,
+1.2.4.1.3,Schüco adaptör IH,3.2.2,E2NS,,,,,KW15,18,,18,2,6,12,,MYA,,TP,5,1.2.4.1,True,2026-03-16,2026-03-21,6,12
+1.2.4.2,WT01.5 Inside,,E2NS,,,,,KW15,,,,,,,INT,,,,4,1.2.4,False,,,,
+1.2.4.2.1,Handle Install,4.3.1,E2NS,,,,,KW15,96,,96,2,12,24,,MYA,,TP,5,1.2.4.2,True,2026-04-13,2026-04-25,12,24
+1.2.4.2.2,Silicone/Gasket,4.3.2,E2NS,,,,,KW15,78,,78,2,12,24,,MYA,,TP,5,1.2.4.2,True,2026-04-13,2026-04-25,12,24
+1.2.4.2.3,Membrane Touchup,4.3.3,E2NS,,,,,KW15,78,,78,2,12,24,,MYA,,TP,5,1.2.4.2,True,2026-04-13,2026-04-25,12,24
+1.2.4.3,WT01.6 Inside,,E2NS,,,,,KW15,,,,,,,INT,,,,4,1.2.4,False,,,,
+1.2.4.3.1,Membrane Ctrl+Rect,4.8.1,E2NS,,,,,KW15,2,,2,2,4,8,,MYA,,TP,5,1.2.4.3,True,2026-04-06,2026-04-09,4,8
+1.2.4.4,WT01.7,,E2NS,E2S,,,,KW15,,,,,,,,,,,4,1.2.4,False,,,,
+1.2.5,FT15 E2S (E/S/W),,E2NS,E2S,,,,KW09,,,,,,,,,,,3,1.2,False,,,,
+1.2.6,Lochfenster E2S,,E2NS,E2S,,,,KW21,,,,,,,,,,,3,1.2,False,,,,
+1.2.7,Türen E2S,,E2NS,E2S,,,22620.58,KW21,14,,14,,,,,,04.15,Pmt,3,1.2,False,,,,
+1.2.7.1,Dorma sliding door,2.7.0,E2NS,,,,,KW21,1,,1,2,3,6,,MYA,,TP,4,1.2.7,True,,,,
+1.2.7.2,Terminal Doors,2.13.1,E2NS,,,,,KW21,12,,12,4,12,48,,MYA,,TP,4,1.2.7,True,,,,
+1.2.7.3,Hotel Doors,2.13.2,E2NS,,,,,KW21,1,,1,,,,,,,TP,4,1.2.7,True,,,,
+1.2.8,FT18 E2S,,E2NS,E2S,,,20452.57,KW19,412,143,269,,,,,,04.16,Pmt,3,1.2,False,,,,
+1.2.8.1,Module Install,2.12.1,E2NS,,,,,KW19,146,143,3,4,3,12,,MYA,,TP,4,1.2.8,True,2026-03-26,2026-03-28,3,12
+1.2.8.2,Paint+bolt,2.12.2,E2NS,,,,,KW19,1,,1,10,48,480,,MYA,,TP,4,1.2.8,True,2026-02-02,2026-03-28,48,480
+1.2.8.3,Trapezoidal sheet,2.12.3,E2NS,,,,,KW19,265,,265,4,24,96,,MYA,,TP,4,1.2.8,True,2026-03-16,2026-03-28,12,96
+1.2.9,Canopy E2S Pullman,,E2NS,E2S,,,30526.51,KW19,288,,288,,,,,,04.17,Pmt,3,1.2,False,,,,
+1.2.9.1,Steel install,2.6.1,E2NS,,,,,KW19,40,,40,5,12,60,,MYA,,TP,4,1.2.9,True,2026-02-16,2026-02-28,12,60
+1.2.9.2,Al Substructure,2.6.2,E2NS,,,,,KW19,105,,105,4,12,48,,MYA,,TP,4,1.2.9,True,2026-03-02,2026-03-14,12,48
+1.2.9.3,Al Cladding,2.6.3,E2NS,,,,,KW19,143,,143,4,6,24,,MYA,,TP,4,1.2.9,True,2026-03-09,2026-03-14,6,24
+1.2.10,FT16 Alu Cladding,,E2NS,E2S,,,57000,KW17,382,,382,,,,,,04.18,Pmt,3,1.2,False,,,,
+1.2.10.1,Secondary Steel,3.5.1,E2NS,,,,,KW17,1,,1,,,,,MYA,,TP,4,1.2.10,True,,,,
+1.2.10.2,Design+Static,3.5.2,E2NS,,,,,KW17,1,,1,,,,,MYA,,TP,4,1.2.10,True,,,,
+1.2.10.3,Procurement+Mfg,3.5.3,E2NS,,,,,KW17,1,,1,,,,,MYA,,TP,4,1.2.10,True,,,,
+1.2.10.4,Installation,3.5.4,E2NS,,,,,KW17,1,,1,4,12,48,,MYA,,TP,4,1.2.10,True,2026-03-30,2026-04-11,12,48
+1.2.10.5,Brackets,3.5.5,E2NS,,,,,KW17,162,,162,4,12,48,,MYA,,TP,4,1.2.10,True,2026-03-30,2026-04-11,12,48
+1.2.10.6,Al Profiles,3.5.6,E2NS,,,,,KW17,95,,95,4,6,24,,MYA,,TP,4,1.2.10,True,2026-04-06,2026-04-11,6,24
+1.2.10.7,Al Cladding,3.5.7,E2NS,,,,,KW17,121,,121,4,12,48,,MYA,,TP,4,1.2.10,True,2026-04-13,2026-04-25,12,48
+1.2.11,FT17 Al Soffit,,E2NS,E2S,,,70643.57,KW21,3411,,3411,,,,,,04.19,Pmt,3,1.2,False,,,,
+1.2.11.1,MEP Completion,3.6.1,E2NS,,,,,KW21,,,,,,,,URW,,TP,4,1.2.11,True,,,,
+1.2.11.2,Brackets,3.6.2,E2NS,,,,,KW21,1673,,1673,4,30,120,,MYA,,TP,4,1.2.11,True,2026-04-27,2026-05-16,18,120
+1.2.11.3,Al Profiles,3.6.3,E2NS,,,,,KW21,1245,,1245,4,12,48,,MYA,,TP,4,1.2.11,True,2026-05-04,2026-05-16,12,48
+1.2.11.4,Al Cladding,3.6.4,E2NS,,,,,KW21,493,,493,4,36,144,,MYA,,TP,4,1.2.11,True,2026-05-11,2026-05-30,18,144
+1.2.12,Stabgeländer E2S RT01,,E2NS,E2S,,,21663.4,KW21,573,,573,,,,,,02.17,Pmt,3,1.2,False,,,,
+1.2.12.1,Brackets NTA,3.4.1,E2NS,,,,,KW21,173,,173,3,18,54,,MYA,,TP,4,1.2.12,True,2026-01-26,2026-02-07,12,54
+1.2.12.2,Roofing,3.4.2,E2NS,,,,,KW21,,,,,,,,HOE,,TP,4,1.2.12,True,,,,
+1.2.12.3,Steel Constr,3.4.3,E2NS,,,,,KW21,173,,173,2,6,12,,MYA,,TP,4,1.2.12,True,2026-03-30,2026-04-04,6,12
+1.2.12.4,Al Module,3.4.4,E2NS,,,,,KW21,62,,62,2,6,12,,MYA,,TP,4,1.2.12,True,2026-03-30,2026-04-04,6,12
+1.2.12.5,Attika Install,3.4.5,E2NS,,,,,KW21,62,,62,2,12,24,,MYA,,TP,4,1.2.12,True,2026-04-02,2026-04-08,6,24
+1.2.12.6,Glass install,3.4.6,E2NS,,,,,KW21,103,,103,4,12,48,,MYA,,TP,4,1.2.12,True,2026-04-06,2026-04-18,12,48
+1.2.13,Attikaabdeckungen E2S,,E2NS,E2S,,,14593.6,KW21,283,255,28,,,,,,02.18,Pmt,3,1.2,False,,,,
+1.2.13.1,7.OG,2.4.1,E2NS,,,,,KW21,200,191,9,5,3,15,,MYA,,TP,4,1.2.13,True,2025-12-01,2025-12-03,3,15
+1.2.13.2,5.OG,2.4.2,E2NS,,,,,KW21,24,23,1,5,3,15,,MYA,,TP,4,1.2.13,True,2025-12-04,2025-12-06,3,15
+1.2.13.3,3.OG,,E2NS,,,,,KW21,,,,,,,,,,,4,1.2.13,False,,,,
+1.2.13.3.1,Design Coord,2.4.3.1,E2NS,,,,,KW21,,,,,,,,MYA,,TP,5,1.2.13.3,True,,,,
+1.2.13.3.2,3.OG West,2.4.3.2,E2NS,,,,,KW21,28,16,12,3,12,33,,MYA,,TP,5,1.2.13.3,True,2025-12-08,2025-12-19,11,33
+1.2.13.3.3,3.OG East,2.4.3.3,E2NS,,,,,KW21,31,25,6,3,12,36,,MYA,,TP,5,1.2.13.3,True,2026-01-12,2026-01-24,12,36
+1.2.14,Final Cleaning E2S,,E2NS,E2S,,,,KW23,36,,36,,,,,,02.22,Pmt,3,1.2,False,,,,
+1.2.14.1,Glass replacement,2.10.0,E2NS,,,,,KW23,36,,36,4,12,48,,MYA,,TP,4,1.2.14,True,,,,
+1.2.15,Documentation E2S,,E2NS,E2S,,,,KW23,,,,,,,,,,,3,1.2,False,,,,
+1.2.15.1,WT04,4.11.1,E2NS,,,,,KW23,,,,,,,,MYA,,TP,4,1.2.15,True,,,,
+1.2.15.2,WT01.5,4.11.2,E2NS,,,,,KW23,,,,,,,,MYA,,TP,4,1.2.15,True,,,,
+1.2.15.3,FT15,4.11.3,E2NS,,,,,KW23,,,,,,,,MYA,,TP,4,1.2.15,True,,,,
+1.2.15.4,FT03,4.11.4,E2NS,,,,,KW23,,,,,,,,MYA,,TP,4,1.2.15,True,,,,
+1.2.15.5,FT06,4.11.5,E2NS,,,,,KW23,,,,,,,,MYA,,TP,4,1.2.15,True,,,,
+1.2.15.6,FT09,4.11.6,E2NS,,,,,KW23,,,,,,,,MYA,,TP,4,1.2.15,True,,,,
+1.2.15.7,FT14,4.11.7,E2NS,,,,,KW23,,,,,,,,MYA,,TP,4,1.2.15,True,,,,
+1.2.16,Steel substr NTA049,,E2NS,E2S,NTA049,DONE,,KW05,,,,,,,,,,,3,1.2,False,,,,
+1.2.16.1,Steel substructure,2.5.0,E2NS,,,,,KW05,2,2,,4,4,16,,MYA,,TP,4,1.2.16,True,,,,
+1.3,E2N NTAs,,E2NS,E2N,,,,,,,,,,,,,,,2,1,False,,,,
+1.3.1,Sheet WT01 NTA050/051,,E2NS,,NTA050/051,,52007.5,KW11,,,,,,,,,03.11,Pmt,3,1.3,False,,,,
+1.3.1.1,Breuninger Al Reinf,1.6.0,E2NS,,,,,KW11,30,30,,2,6,12,,MYA,,TP,4,1.3.1,True,2025-12-01,2025-12-06,6,12
+1.3.2,1141 Partial Attika,,E2NS,,NTA052,,11876.5,KW17,,,,,,,,,,,3,1.3,False,,,,
+1.3.3,Attika Removal East,,E2NS,,NTA048,DONE,15875,KW05,,,,,,,,,,,3,1.3,False,,,,
+1.3.4,Courtyard Water Tap,,E2NS,,NTA065,,16955.14,KW17,,,,,,,,,,,3,1.3,False,,,,
+1.4,E2S NTAs,,E2NS,E2S,,,,,,,,,,,,,,,2,1,False,,,,
+1.4.1,Justification NTA048-062,,E2NS,,,DONE,161453.55,KW05,,,,,,,,,05.11,Pmt,3,1.4,False,,,,
+1.4.1.1,Attika Removal,,E2NS,,NTA048,,15875,KW05,,,,,,,,,,,4,1.4.1,False,,,,
+1.4.1.2,Steel Masonry,,E2NS,,NTA049,,22301,KW05,,,,,,,,,,,4,1.4.1,False,,,,
+1.4.1.3,3.OG Attika,,E2NS,,NTA054,,31624.8,KW05,,,,,,,,,,,4,1.4.1,False,,,,
+1.4.1.4,3.OG Balustrade,,E2NS,,NTA055,,11320,KW05,,,,,,,,,,,4,1.4.1,False,,,,
+1.4.1.5,FT18 Late,,E2NS,,NTA056,,159720,KW05,,,,,,,,,,,4,1.4.1,False,,,,
+1.4.1.6,Design Balustrade,,E2NS,,NTA057,,22240,KW05,,,,,,,,,,,4,1.4.1,False,,,,
+1.4.1.7,FT12 Drainage,,E2NS,,NTA062,,5834,KW05,,,,,,,,,,,4,1.4.1,False,,,,
+1.4.2,3.OG Attika Exec,,E2NS,,NTA054,,21377.79,KW07,,,,,,,,,05.12,Pmt,3,1.4,False,,,,
+1.4.3,NTA058/059,,E2NS,,NTA058/059,,78344.18,KW17,,,,,,,,,05.13,Pmt,3,1.4,False,,,,
+1.4.3.1,FT14 Spandrel D&P,,E2NS,,NTA058,,18807.88,KW17,,,,,,,,,,,4,1.4.3,False,,,,
+1.4.3.2,FT14 Spandrel Install,,E2NS,,NTA058,,,KW17,,,,,,,,,,,4,1.4.3,False,,,,
+1.4.3.2.1,New Design,2.8.1,E2NS,,,,,KW17,,,,,,,,MYA,,TP,5,1.4.3.2,True,,,,
+1.4.3.2.2,Approval SOB/URW,2.8.2,E2NS,,,,,KW17,,,,,,,,SOB,,TP,5,1.4.3.2,True,,,,
+1.4.3.2.3,Procurement+Mfg,2.8.3,E2NS,,,,,KW17,2,,2,,,,,MYA,,TP,5,1.4.3.2,True,,,,
+1.4.3.2.4,Installation,2.8.4,E2NS,,,,,KW17,2,,2,2,5,12,,MYA,,TP,5,1.4.3.2,True,2026-02-16,2026-02-21,6,12
+1.4.3.3,Vent D&M,,E2NS,,NTA059,,41189.26,KW17,,,,,,,,,,,4,1.4.3,False,,,,
+1.4.3.4,Vent Install,,E2NS,,NTA059,,,KW17,,,,,,,,,,,4,1.4.3,False,,,,
+1.4.3.4.1,New Design,2.9.1,E2NS,,,,,KW17,,,,,,,,MYA,,TP,5,1.4.3.4,True,,,,
+1.4.3.4.2,Approval SOB/URW,2.9.2,E2NS,,,,,KW17,,,,,,,,SOB,,TP,5,1.4.3.4,True,,,,
+1.4.3.4.3,Procurement+Mfg,2.9.3,E2NS,,,,,KW17,2,,2,,,,,MYA,,TP,5,1.4.3.4,True,,,,
+1.4.3.4.4,Installation,2.9.4,E2NS,,,,,KW17,2,,2,2,5,12,,MYA,,TP,5,1.4.3.4,True,2026-02-16,2026-02-21,6,12
+1.4.4,FT16 Steel NTA061,,E2NS,,NTA061,,215036,KW19,,,,,,,,,05.14,Pmt,3,1.4,False,,,,
+1.5,Final Milestone E2NS,,E2NS,E2NS,,,73603.72,KW23,,,,,,,,,Final,Pmt,2,1,False,,,,
+2,D1D2 Contract Works,,D1D2,D1+D2,,,,,,,,,,,,,,,1,,False,,,,
+2.1,D1D2 Remaining Works,,D1D2,,,,,,,,,,,,,,,,2,2,False,,,,
+2.1.1,Int Defects D2,,D1D2,,,,95000,KW09,,,,,,,,,01.11,Pmt,3,2.1,False,,,,
+2.1.2,Int Defects D1,,D1D2,,,,95000,KW11,,,,,,,,,01.12,Pmt,3,2.1,False,,,,
+2.1.3,Ext Defects,,D1D2,,,,84550,KW17,,,,,,,,,01.13,Pmt,3,2.1,False,,,,
+2.1.4,Glass Replace,,D1D2,,,,79325,KW17,,,,,,,,,01.14,Pmt,3,2.1,False,,,,
+2.1.5,Staircases Material,,D1D2,,NTA040,,85500,KW09,,,,,,,,,01.15,Pmt,3,2.1,False,,,,
+2.1.6,Staircases Complete,,D1D2,,NTA040,,47500,KW13,,,,,,,,,01.16,Pmt,3,2.1,False,,,,
+2.1.7,Doors Defects,,D1D2,,,,65075,KW21,,,,,,,,,01.17,Pmt,3,2.1,False,,,,
+2.1.8,Bird Deter D2,,D1D2,,,,101149.83,KW13,,,,,,,,,01.18,Pmt,3,2.1,False,,,,
+2.1.9,Bird Deter D1,,D1D2,,,,101149.83,KW07,,,,,,,,,01.19,Pmt,3,2.1,False,,,,
+2.1.10,Final Cleaning,,D1D2,,,,47500,KW17,,,,,,,,,01.20,Pmt,3,2.1,False,,,,
+2.2,D1D2 NTAs,,D1D2,,,,,,,,,,,,,,,,2,2,False,,,,
+2.2.1,Staircase Revision,,D1D2,,NTA040,,144952,KW05,,,,,,,,,02.11,Pmt,3,2.2,False,,,,
+2.2.2,4.OG Vent MOS,,D1D2,,NTA041,,25420,KW07,,,,,,,,,02.12,Pmt,3,2.2,False,,,,
+2.2.3,4.OG Vent Install,,D1D2,,NTA041,,,KW11,,,,,,,,,02.13,Pmt,3,2.2,False,,,,
+2.2.4,Justif NTA042-046,,D1D2,,,,52622,KW05,,,,,,,,,02.14,Pmt,3,2.2,False,,,,
+2.2.5,Logo Anchorage,,D1D2,,DNTA046,,7955,KW07,,,,,,,,,02.15,Pmt,3,2.2,False,,,,
+2.3,Final Milestone D1D2,,D1D2,,,,46410.7,KW23,,,,,,,,,Final,Pmt,2,2,False,,,,
