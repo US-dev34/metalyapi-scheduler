@@ -53,6 +53,19 @@ class WBSItemCreate(BaseModel):
     sort_order: int = Field(0, ge=0)
     level: int = Field(0, ge=0)
     is_summary: bool = False
+    building: str | None = None
+    nta_ref: str | None = None
+    status: str | None = None
+    budget_eur: float = 0.0
+    target_kw: str | None = None
+    scope: str | None = None
+    notes: str | None = None
+    qty_ext: float = 0.0
+    done_ext: float = 0.0
+    rem_ext: float = 0.0
+    qty_int: float = 0.0
+    done_int: float = 0.0
+    rem_int: float = 0.0
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -66,6 +79,19 @@ class WBSItemUpdate(BaseModel):
     sort_order: int | None = None
     level: int | None = None
     is_summary: bool | None = None
+    building: str | None = None
+    nta_ref: str | None = None
+    status: str | None = None
+    budget_eur: float | None = None
+    target_kw: str | None = None
+    scope: str | None = None
+    notes: str | None = None
+    qty_ext: float | None = None
+    done_ext: float | None = None
+    rem_ext: float | None = None
+    qty_int: float | None = None
+    done_int: float | None = None
+    rem_int: float | None = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -81,6 +107,19 @@ class WBSItemResponse(BaseModel):
     sort_order: int
     level: int
     is_summary: bool
+    building: str | None = None
+    nta_ref: str | None = None
+    status: str | None = None
+    budget_eur: float = 0.0
+    target_kw: str | None = None
+    scope: str | None = None
+    notes: str | None = None
+    qty_ext: float = 0.0
+    done_ext: float = 0.0
+    rem_ext: float = 0.0
+    qty_int: float = 0.0
+    done_int: float = 0.0
+    rem_int: float = 0.0
     created_at: datetime | None = None
     updated_at: datetime | None = None
     children: list[WBSItemResponse] = []
